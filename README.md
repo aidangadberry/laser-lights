@@ -15,7 +15,7 @@ In LaserLights, users will be able to:
 - [ ] Add prisms to split/combine colors
 - [ ] Move and rotate each of the objects
 
-In addition, this project will include: 
+In addition, this project will include:
 - [ ] An About modal providing some information about laser technology
 - [ ] A button to "turn out the lights" to give the laser patterns more contrast
 
@@ -26,6 +26,10 @@ This project will be implemented with the following technologies:
 * Vanilla JavaScript for object and math logic
 * CSS for styling
 * `HTML5 Canvas` for rendering
+
+### Wireframe
+
+![laser_lights_wireframe 1](https://user-images.githubusercontent.com/9375829/44360566-16c37200-a470-11e8-9947-268167ba75a8.png)
 
 ### Implementation Timeline
 
