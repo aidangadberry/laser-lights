@@ -1,0 +1,20 @@
+.main-content-wrapper {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.item-control-panel {
+  padding: 5px;
+}
+
+.item-dragger {
+  display: flex;
+  align-items: center;
+
+  border: 1px solid black;
+  padding: 3px;
+}
+
+#canvas {
+  border: 1px solid #333;
+}
