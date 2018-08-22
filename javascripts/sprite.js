@@ -1,7 +1,9 @@
 class Sprite {
-  constructor(pos, ctx, dir) {
-    this.size = [50, 20];
-    this.pos = pos;
+  constructor(x, y, ctx, dir) {
+    this.width = 50;
+    this.height = 20;
+    this.x = x;
+    this.y = y;
     this.dir = dir;
   }
 }

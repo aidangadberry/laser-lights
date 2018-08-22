@@ -1,8 +1,8 @@
 import Sprite from './sprite';
 
 class Mirror extends Sprite {
-  constructor(pos, ctx, dir = 'E') {
-    super(pos, ctx, dir);
+  constructor(x, y, ctx, dir = 'E') {
+    super(x, y, ctx, dir);
     this.url = "images/mirror_entity.png";
   }
 
@@ -11,7 +11,7 @@ class Mirror extends Sprite {
     img.src = this.url;
 
     img.onload = () => {
-      ctx.drawImage(img, this.pos[0], this.pos[1]);
+      ctx.drawImage(img, this.x, this.y);
     }
   }
 }
