@@ -4,7 +4,7 @@ class Sprite {
     this.height = 20;
     this.x = x;
     this.y = y;
-    this.deg = deg;
+    this.rad = deg * Math.PI / 180;
     this.ctx = ctx;
     this.img = new Image();
     this.img.src = url;
@@ -20,11 +20,11 @@ class Sprite {
 
   draw() {
     this.ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
-    this.ctx.rotate(this.deg * Math.PI / 180);
+    this.ctx.rotate(this.rad);
 
     this.ctx.drawImage(this.img, -this.width / 2, -this.height / 2);
-    
-    this.ctx.rotate((360 - this.deg) * Math.PI / 180);
+
+    this.ctx.rotate(2 * Math.PI - this.rad);
     this.ctx.translate(-this.x - this.width / 2, -this.y - this.height / 2);
   }
 }
