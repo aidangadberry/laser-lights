@@ -16,6 +16,12 @@ class Laser extends Sprite {
     );
     this.ctx.stroke();
   }
+
+  draw() {
+    super.draw();
+    this.laserPos = Util.getRotatedLaserPos(this.x, this.y, this.width, this.height, this.rad);
+    this.drawLaser();
+  }
 }
 
 export default Laser;

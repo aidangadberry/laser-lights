@@ -13,11 +13,7 @@ class Sprite {
       this.draw();
     }
   }
-
-  draw() {
-    this.ctx.drawImage(this.img, this.x, this.y);
-  }
-
+  
   draw() {
     this.ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
     this.ctx.rotate(this.rad);
@@ -26,6 +22,10 @@ class Sprite {
 
     this.ctx.rotate(2 * Math.PI - this.rad);
     this.ctx.translate(-this.x - this.width / 2, -this.y - this.height / 2);
+  }
+
+  rotateSprite(deg) {
+    this.rad += deg * Math.PI / 180;
   }
 }
 
