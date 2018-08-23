@@ -2,12 +2,24 @@ import Laser from './laser';
 import Mirror from './mirror';
 
 class Game {
-  constructor(ctx) {
+  constructor(canvas) {
     this.lasers = [];
     this.mirrors = [];
-    this.ctx = ctx;
+    this.canvas = canvas;
+    this.ctx = canvas.getContext('2d');
 
-    this.ctx.scale(2, 2);
+    this.scaleByDevicePixelRatio(600);
+  }
+
+  scaleByDevicePixelRatio(canvasSize) {
+    this.canvas.style.width = canvasSize + "px";
+    this.canvas.style.height = canvasSize + "px";
+
+    const scale = window.devicePixelRatio;
+    this.canvas.width = canvasSize * scale;
+    this.canvas.height = canvasSize * scale;
+
+    this.ctx.scale(scale, scale);
   }
 
   run() {
