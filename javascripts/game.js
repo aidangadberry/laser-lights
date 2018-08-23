@@ -7,6 +7,7 @@ class Game {
     this.mirrors = [];
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
+    this.currentSprite = [];
 
     this.scaleByDevicePixelRatio(600);
 
@@ -14,20 +15,28 @@ class Game {
       switch (event.code) {
         case 'ArrowLeft':
         case 'KeyA':
-          console.log(this.lasers[0]);
-          this.lasers[0].rotateSprite(-1.5);
+          if (this.currentSprite[0] instanceof Laser) {
+            this.currentSprite[0].rotateSprite(-1.5);
+          } else {
+            this.currentSprite[0].rotateSprite(-90);
+          }
           this.renderEntities();
           break;
         case 'ArrowRight':
         case 'KeyD':
-          console.log(this.lasers[0]);
-          this.lasers[0].rotateSprite(1.5);
+          if (this.currentSprite[0] instanceof Laser) {
+            this.currentSprite[0].rotateSprite(1.5);
+          } else {
+            this.currentSprite[0].rotateSprite(90);
+          }
           this.renderEntities();
           break;
         default:
 
       }
     });
+
+    document.addEventListener('mousedown', e => this.onMouseDown(e));
   }
 
   scaleByDevicePixelRatio(canvasSize) {
@@ -74,6 +83,47 @@ class Game {
 
     this.mirrors.push(mirror);
   }
+
+  getCursorPosition(canvas, e) {
+      var bounds = canvas.getBoundingClientRect();
+      var x = e.clientX - bounds.left;
+      var y = e.clientY - bounds.top;
+      return [x, y];
+  }
+
+  rectangleMouseCollision(cursorPos, sprite) {
+    return (
+      cursorPos[0] >= sprite.x && cursorPos[0] <= sprite.x + sprite.width &&
+      cursorPos[1] >= sprite.y && cursorPos[1] <= sprite.y + sprite.height
+    );
+  }
+
+  onMouseDown(e) {
+    e.stopPropagation();
+
+    for (var i = 0; i < this.lasers.length; i++) {
+      if (this.rectangleMouseCollision(this.getCursorPosition(this.canvas, e), this.lasers[i])) {
+        this.currentSprite[0] = this.lasers[i];
+        Array.from(document.getElementsByTagName('img')).forEach(img => img.classList.remove('active'));
+        document.getElementById('laser-image').classList.add('active');
+        // this.canvas.addEventListener('mousemove', this.onMouseMove);
+        return;
+      }
+    }
+    for (var i = 0; i < this.mirrors.length; i++) {
+      if (this.rectangleMouseCollision(this.getCursorPosition(this.canvas, e), this.mirrors[i])) {
+        this.currentSprite[0] = this.mirrors[i];
+        Array.from(document.getElementsByTagName('img')).forEach(img => img.classList.remove('active'));
+        document.getElementById('mirror-image').classList.add('active');
+        // this.canvas.addEventListener('mousemove', this.onMouseMove);
+        return;
+      }
+    }
+  }
+
+  // onMouseMove(e) {
+  //   e.stopPropagation();
+  // }
 }
 
 export default Game;

@@ -15,6 +15,15 @@
   padding: 3px;
 }
 
+.active {
+  border: 1px dashed red;
+}
+
+img {
+  margin: 2px;
+  border: 1px solid white;
+}
+
 #canvas {
   border: 1px solid #333;
   width: 400px;
