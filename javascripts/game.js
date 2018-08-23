@@ -6,6 +6,8 @@ class Game {
     this.lasers = [];
     this.mirrors = [];
     this.ctx = ctx;
+
+    this.ctx.scale(2, 2);
   }
 
   run() {
@@ -16,15 +18,16 @@ class Game {
 
   renderEntities() {
     for (var i = 0; i < this.lasers.length; i++) {
-      this.lasers[i].render(this.ctx);
+      this.lasers[i].draw();
+      this.lasers[i].drawLaser();
     }
     for (var i = 0; i < this.mirrors.length; i++) {
-      this.mirrors[i].render(this.ctx);
+      this.mirrors[i].draw();
     }
   }
 
   addLaser(x, y) {
-    const laser = new Laser(x, y, this.ctx);
+    const laser = new Laser(x, y, this.ctx, -7);
 
     this.lasers.push(laser);
   }
