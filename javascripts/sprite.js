@@ -13,7 +13,11 @@ class Sprite {
       this.draw();
     }
   }
-  
+
+  getCenterPos() {
+    return [this.x + this.width / 2, this.y + this.height / 2];
+  }
+
   draw() {
     this.ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
     this.ctx.rotate(this.rad);

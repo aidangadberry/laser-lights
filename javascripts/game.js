@@ -1,5 +1,7 @@
 import Laser from './laser';
 import Mirror from './mirror';
+import {getBeams} from './beam';
+import {pointIsOnMirrorEdge, collidesWithObject} from './util';
 
 class Game {
   constructor(canvas) {
@@ -52,7 +54,7 @@ class Game {
 
   run() {
     this.addLaser(200, 200);
-    this.addMirror(300, 300);
+    this.addMirror(300, 100);
     this.renderEntities();
   }
 
@@ -68,12 +70,13 @@ class Game {
     }
 
     for (var i = 0; i < this.lasers.length; i++) {
-      this.lasers[i].drawLaser();
+      let laser = this.lasers[i]
+      getBeams(laser, this.lasers, this.mirrors);
     }
   }
 
   addLaser(x, y) {
-    const laser = new Laser(x, y, this.ctx, -180);
+    const laser = new Laser(x, y, this.ctx, -45);
 
     this.lasers.push(laser);
   }
@@ -102,7 +105,7 @@ class Game {
     e.stopPropagation();
 
     for (var i = 0; i < this.lasers.length; i++) {
-      if (this.rectangleMouseCollision(this.getCursorPosition(this.canvas, e), this.lasers[i])) {
+      if (collidesWithObject(this.getCursorPosition(this.canvas, e), this.lasers[i])) {
         this.currentSprite[0] = this.lasers[i];
         Array.from(document.getElementsByTagName('img')).forEach(img => img.classList.remove('active'));
         document.getElementById('laser-image').classList.add('active');
@@ -111,7 +114,7 @@ class Game {
       }
     }
     for (var i = 0; i < this.mirrors.length; i++) {
-      if (this.rectangleMouseCollision(this.getCursorPosition(this.canvas, e), this.mirrors[i])) {
+      if (collidesWithObject(this.getCursorPosition(this.canvas, e), this.mirrors[i])) {
         this.currentSprite[0] = this.mirrors[i];
         Array.from(document.getElementsByTagName('img')).forEach(img => img.classList.remove('active'));
         document.getElementById('mirror-image').classList.add('active');
