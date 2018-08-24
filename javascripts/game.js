@@ -53,14 +53,15 @@ class Game {
   }
 
   run() {
-    this.addLaser(200, 200);
-    this.addLaser(430, 300);
+    this.addLaser(200, 200, 312);
+    this.addLaser(430, 300, 140);
     this.addMirror(300, 100);
-    this.addMirror(310, 130);
-    this.addMirror(100, 200);
+    this.addMirror(310, 130, 180);
+    this.addMirror(100, 400, 270);
     this.addMirror(400, 40);
-    this.addMirror(210, 500);
+    this.addMirror(210, 500, 180);
     this.renderEntities();
+    this.currentSprite[0] = this.lasers[1];
   }
 
   renderEntities() {
@@ -80,14 +81,14 @@ class Game {
     }
   }
 
-  addLaser(x, y) {
-    const laser = new Laser(x, y, this.ctx, -45);
+  addLaser(x, y, deg = 0) {
+    const laser = new Laser(x, y, this.ctx, deg);
 
     this.lasers.push(laser);
   }
 
-  addMirror(x, y) {
-    const mirror = new Mirror(x, y, this.ctx);
+  addMirror(x, y, deg = 0) {
+    const mirror = new Mirror(x, y, this.ctx, deg);
 
     this.mirrors.push(mirror);
   }
