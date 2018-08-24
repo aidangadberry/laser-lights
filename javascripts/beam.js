@@ -7,7 +7,7 @@ import {
 
 function drawBeam(startPos, endPos) {
   const ctx = document.getElementById('canvas').getContext('2d');
-  
+
   ctx.beginPath();
   ctx.moveTo(startPos[0], startPos[1]);
   ctx.lineTo(endPos[0], endPos[1]);
@@ -16,7 +16,7 @@ function drawBeam(startPos, endPos) {
 
 
 function getCollision(startPos, angle, lasers, mirrors) {
-  let currPos = startPos;
+  let currPos = startPos.slice(0);
   const dx = Math.cos(angle);
   const dy = Math.sin(angle);
 
@@ -28,27 +28,31 @@ function getCollision(startPos, angle, lasers, mirrors) {
       if (collidesWithObject(currPos, mirrors[i])) {
         if (pointIsOnMirrorEdge(currPos, mirrors[i])) {
           console.log("hit a mirror");
-          return ({laserPos: currPos, angle: mirrors[i].reflectedAngle(angle), beamEnd: true});
+          return ({endPos: currPos, angle: mirrors[i].reflectedAngle(angle), beamEnd: false});
         } else {
           console.log("not a mirror");
-          return ({laserPos: currPos, angle: angle, beamEnd: true});
+          return ({endPos: currPos, angle: angle, beamEnd: true});
         }
       }
     }
   }
 
-  console.log("not a mirror");
-  return ({laserPos: currPos, angle: angle, beamEnd: true});
+  console.log("border");
+  return ({endPos: currPos, angle: angle, beamEnd: true});
 }
 
 export const getBeams = (laser, lasers, mirrors) => {
   let laserPos = getRotatedLaserPos(laser.x, laser.y, laser.width, laser.height, laser.rad);
   let angle = laser.rad;
   let beamEnd = false;
+  let endPos;
+  console.log(laserPos);
 
-  const startPos = laserPos.slice(0);
+  let startPos = laserPos.slice(0);
   while (beamEnd === false) {
-    ({laserPos, angle, beamEnd} = getCollision(laserPos, angle, lasers, mirrors));
-    drawBeam(startPos, laserPos);
+    ({endPos, angle, beamEnd} = getCollision(startPos, angle, lasers, mirrors));
+    console.log(startPos, endPos);
+    drawBeam(startPos, endPos);
+    startPos = endPos.slice(0);
   }
 }

@@ -54,7 +54,12 @@ class Game {
 
   run() {
     this.addLaser(200, 200);
+    this.addLaser(430, 300);
     this.addMirror(300, 100);
+    this.addMirror(310, 130);
+    this.addMirror(100, 200);
+    this.addMirror(400, 40);
+    this.addMirror(210, 500);
     this.renderEntities();
   }
 
