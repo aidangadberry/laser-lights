@@ -127,6 +127,13 @@ function drawBeam(startPos, endPos) {
   ctx.beginPath();
   ctx.moveTo(startPos[0], startPos[1]);
   ctx.lineTo(endPos[0], endPos[1]);
+
+
+  ctx.strokeStyle = "#F00";
+  ctx.shadowBlur = 15;
+  ctx.shadowColor = "#F00"
+  
+  ctx.lineWidth = 1;
   ctx.stroke();
 }
 
@@ -137,8 +144,8 @@ function getCollision(startPos, angle, lasers, mirrors) {
   const dy = Math.sin(angle);
 
   while (Object(_util__WEBPACK_IMPORTED_MODULE_0__["isInBounds"])(currPos)) {
-    currPos[0] += dx;
-    currPos[1] += dy;
+    currPos[0] += dx / 5;
+    currPos[1] += dy / 5;
 
     for (var i = 0; i < mirrors.length; i++) {
       if (Object(_util__WEBPACK_IMPORTED_MODULE_0__["collidesWithObject"])(currPos, mirrors[i])) {
@@ -149,6 +156,12 @@ function getCollision(startPos, angle, lasers, mirrors) {
           console.log("not a mirror");
           return ({endPos: currPos, angle: angle, beamEnd: true});
         }
+      }
+    }
+    for (var i = 0; i < lasers.length; i++) {
+      if (Object(_util__WEBPACK_IMPORTED_MODULE_0__["collidesWithObject"])(currPos, lasers[i])) {
+        console.log("not a mirror");
+        return ({endPos: currPos, angle: angle, beamEnd: true});
       }
     }
   }
@@ -204,32 +217,7 @@ class Game {
 
     this.scaleByDevicePixelRatio(600);
 
-    document.addEventListener('keydown', event => {
-      switch (event.code) {
-        case 'ArrowLeft':
-        case 'KeyA':
-          if (this.currentSprite[0] instanceof _laser__WEBPACK_IMPORTED_MODULE_0__["default"]) {
-            this.currentSprite[0].rotateSprite(-1.5);
-          } else {
-            this.currentSprite[0].rotateSprite(-90);
-          }
-          this.renderEntities();
-          break;
-        case 'ArrowRight':
-        case 'KeyD':
-          if (this.currentSprite[0] instanceof _laser__WEBPACK_IMPORTED_MODULE_0__["default"]) {
-            this.currentSprite[0].rotateSprite(1.5);
-          } else {
-            this.currentSprite[0].rotateSprite(90);
-          }
-          this.renderEntities();
-          break;
-        default:
-
-      }
-    });
-
-    document.addEventListener('mousedown', e => this.onMouseDown(e));
+    this.addListeners();
   }
 
   scaleByDevicePixelRatio(canvasSize) {
@@ -257,6 +245,11 @@ class Game {
 
   renderEntities() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    
+    for (var i = 0; i < this.lasers.length; i++) {
+      let laser = this.lasers[i]
+      Object(_beam__WEBPACK_IMPORTED_MODULE_2__["getBeams"])(laser, this.lasers, this.mirrors);
+    }
 
     for (var i = 0; i < this.mirrors.length; i++) {
       this.mirrors[i].draw();
@@ -264,11 +257,6 @@ class Game {
 
     for (var i = 0; i < this.lasers.length; i++) {
       this.lasers[i].draw();
-    }
-
-    for (var i = 0; i < this.lasers.length; i++) {
-      let laser = this.lasers[i]
-      Object(_beam__WEBPACK_IMPORTED_MODULE_2__["getBeams"])(laser, this.lasers, this.mirrors);
     }
   }
 
@@ -296,6 +284,34 @@ class Game {
       cursorPos[0] >= sprite.x && cursorPos[0] <= sprite.x + sprite.width &&
       cursorPos[1] >= sprite.y && cursorPos[1] <= sprite.y + sprite.height
     );
+  }
+
+  addListeners() {
+    document.addEventListener("keydown", event => {
+      switch (event.code) {
+        case "ArrowLeft":
+        case "KeyA":
+          if (this.currentSprite[0] instanceof _laser__WEBPACK_IMPORTED_MODULE_0__["default"]) {
+            this.currentSprite[0].rotateSprite(-0.1);
+          } else {
+            this.currentSprite[0].rotateSprite(-90);
+          }
+          this.renderEntities();
+          break;
+        case "ArrowRight":
+        case "KeyD":
+          if (this.currentSprite[0] instanceof _laser__WEBPACK_IMPORTED_MODULE_0__["default"]) {
+            this.currentSprite[0].rotateSprite(0.1);
+          } else {
+            this.currentSprite[0].rotateSprite(90);
+          }
+          this.renderEntities();
+          break;
+        default:
+      }
+    });
+
+    document.addEventListener("mousedown", e => this.onMouseDown(e));
   }
 
   onMouseDown(e) {
@@ -419,6 +435,9 @@ class Sprite {
   }
 
   draw() {
+    this.ctx.shadowBlur = 0;
+    this.ctx.shadowColor = "transparent";
+    
     this.ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
     this.ctx.rotate(this.rad);
 

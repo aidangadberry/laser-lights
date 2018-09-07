@@ -19,6 +19,9 @@ class Sprite {
   }
 
   draw() {
+    this.ctx.shadowBlur = 0;
+    this.ctx.shadowColor = "transparent";
+    
     this.ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
     this.ctx.rotate(this.rad);
 

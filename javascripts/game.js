@@ -13,32 +13,7 @@ class Game {
 
     this.scaleByDevicePixelRatio(600);
 
-    document.addEventListener('keydown', event => {
-      switch (event.code) {
-        case 'ArrowLeft':
-        case 'KeyA':
-          if (this.currentSprite[0] instanceof Laser) {
-            this.currentSprite[0].rotateSprite(-1.5);
-          } else {
-            this.currentSprite[0].rotateSprite(-90);
-          }
-          this.renderEntities();
-          break;
-        case 'ArrowRight':
-        case 'KeyD':
-          if (this.currentSprite[0] instanceof Laser) {
-            this.currentSprite[0].rotateSprite(1.5);
-          } else {
-            this.currentSprite[0].rotateSprite(90);
-          }
-          this.renderEntities();
-          break;
-        default:
-
-      }
-    });
-
-    document.addEventListener('mousedown', e => this.onMouseDown(e));
+    this.addListeners();
   }
 
   scaleByDevicePixelRatio(canvasSize) {
@@ -66,6 +41,11 @@ class Game {
 
   renderEntities() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    
+    for (var i = 0; i < this.lasers.length; i++) {
+      let laser = this.lasers[i]
+      getBeams(laser, this.lasers, this.mirrors);
+    }
 
     for (var i = 0; i < this.mirrors.length; i++) {
       this.mirrors[i].draw();
@@ -73,11 +53,6 @@ class Game {
 
     for (var i = 0; i < this.lasers.length; i++) {
       this.lasers[i].draw();
-    }
-
-    for (var i = 0; i < this.lasers.length; i++) {
-      let laser = this.lasers[i]
-      getBeams(laser, this.lasers, this.mirrors);
     }
   }
 
@@ -105,6 +80,34 @@ class Game {
       cursorPos[0] >= sprite.x && cursorPos[0] <= sprite.x + sprite.width &&
       cursorPos[1] >= sprite.y && cursorPos[1] <= sprite.y + sprite.height
     );
+  }
+
+  addListeners() {
+    document.addEventListener("keydown", event => {
+      switch (event.code) {
+        case "ArrowLeft":
+        case "KeyA":
+          if (this.currentSprite[0] instanceof Laser) {
+            this.currentSprite[0].rotateSprite(-0.1);
+          } else {
+            this.currentSprite[0].rotateSprite(-90);
+          }
+          this.renderEntities();
+          break;
+        case "ArrowRight":
+        case "KeyD":
+          if (this.currentSprite[0] instanceof Laser) {
+            this.currentSprite[0].rotateSprite(0.1);
+          } else {
+            this.currentSprite[0].rotateSprite(90);
+          }
+          this.renderEntities();
+          break;
+        default:
+      }
+    });
+
+    document.addEventListener("mousedown", e => this.onMouseDown(e));
   }
 
   onMouseDown(e) {

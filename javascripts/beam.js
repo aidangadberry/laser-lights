@@ -11,6 +11,13 @@ function drawBeam(startPos, endPos) {
   ctx.beginPath();
   ctx.moveTo(startPos[0], startPos[1]);
   ctx.lineTo(endPos[0], endPos[1]);
+
+
+  ctx.strokeStyle = "#F00";
+  ctx.shadowBlur = 15;
+  ctx.shadowColor = "#F00"
+  
+  ctx.lineWidth = 1;
   ctx.stroke();
 }
 
@@ -21,8 +28,8 @@ function getCollision(startPos, angle, lasers, mirrors) {
   const dy = Math.sin(angle);
 
   while (isInBounds(currPos)) {
-    currPos[0] += dx;
-    currPos[1] += dy;
+    currPos[0] += dx / 5;
+    currPos[1] += dy / 5;
 
     for (var i = 0; i < mirrors.length; i++) {
       if (collidesWithObject(currPos, mirrors[i])) {
@@ -33,6 +40,12 @@ function getCollision(startPos, angle, lasers, mirrors) {
           console.log("not a mirror");
           return ({endPos: currPos, angle: angle, beamEnd: true});
         }
+      }
+    }
+    for (var i = 0; i < lasers.length; i++) {
+      if (collidesWithObject(currPos, lasers[i])) {
+        console.log("not a mirror");
+        return ({endPos: currPos, angle: angle, beamEnd: true});
       }
     }
   }
