@@ -16,15 +16,21 @@ class Game {
     this.addListeners();
   }
 
-  scaleByDevicePixelRatio(canvasSize) {
-    this.canvas.style.width = canvasSize + "px";
-    this.canvas.style.height = canvasSize + "px";
+  scaleByDevicePixelRatio(canvasSizeX, canvasSizeY) {
+    this.canvas.style.width = canvasSizeX + "px";
+    this.canvas.style.height = canvasSizeY + "px";
 
     const scale = window.devicePixelRatio;
-    this.canvas.width = canvasSize * scale;
-    this.canvas.height = canvasSize * scale;
+    this.canvas.width = canvasSizeX * scale;
+    this.canvas.height = canvasSizeY * scale;
 
     this.ctx.scale(scale, scale);
+  }
+
+  resizeCanvas() {
+    this.scaleByDevicePixelRatio(window.outerWidth, window.outerHeight)
+
+    this.renderEntities();
   }
 
   run() {
@@ -35,7 +41,7 @@ class Game {
     this.addMirror(100, 400, 270);
     this.addMirror(400, 40);
     this.addMirror(210, 500, 180);
-    this.renderEntities();
+    this.resizeCanvas();
     this.currentSprite[0] = this.lasers[1];
   }
 
@@ -83,12 +89,15 @@ class Game {
   }
 
   addListeners() {
-    document.addEventListener("keydown", event => {
+    let turnInterval = null;
+
+    document.addEventListener("keypress", event => {
       switch (event.code) {
         case "ArrowLeft":
         case "KeyA":
           if (this.currentSprite[0] instanceof Laser) {
-            this.currentSprite[0].rotateSprite(-0.1);
+            turnInterval = setInterval(this.currentSprite[0].rotateSprite(-0.1), 1);
+            console.log(turnInterval);
           } else {
             this.currentSprite[0].rotateSprite(-90);
           }
@@ -107,7 +116,10 @@ class Game {
       }
     });
 
+    document.addEventListener("keyup", clearInterval(turnInterval));
+
     document.addEventListener("mousedown", e => this.onMouseDown(e));
+    window.addEventListener("resize", () => this.resizeCanvas());
   }
 
   onMouseDown(e) {
