@@ -28,7 +28,7 @@ class Game {
   }
 
   resizeCanvas() {
-    this.scaleByDevicePixelRatio(window.outerWidth, window.outerHeight)
+    this.scaleByDevicePixelRatio(window.innerWidth, window.innerHeight)
 
     this.renderEntities();
   }
@@ -96,8 +96,7 @@ class Game {
         case "ArrowLeft":
         case "KeyA":
           if (this.currentSprite[0] instanceof Laser) {
-            turnInterval = setInterval(this.currentSprite[0].rotateSprite(-0.1), 1);
-            console.log(turnInterval);
+            turnInterval = setInterval(this.currentSprite[0].rotateSprite(-0.5), 1);
           } else {
             this.currentSprite[0].rotateSprite(-90);
           }
