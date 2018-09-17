@@ -11,8 +11,6 @@ class Game {
     this.ctx = canvas.getContext('2d');
     this.currentSprite;
 
-    this.scaleByDevicePixelRatio(600);
-
     this.addListeners();
   }
 
@@ -79,13 +77,6 @@ class Game {
       var x = e.clientX - bounds.left;
       var y = e.clientY - bounds.top;
       return [x, y];
-  }
-
-  rectangleMouseCollision(cursorPos, sprite) {
-    return (
-      cursorPos[0] >= sprite.x && cursorPos[0] <= sprite.x + sprite.width &&
-      cursorPos[1] >= sprite.y && cursorPos[1] <= sprite.y + sprite.height
-    );
   }
 
   addListeners() {

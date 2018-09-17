@@ -144,29 +144,25 @@ function getCollision(startPos, angle, lasers, mirrors) {
   const dy = Math.sin(angle);
 
   while (Object(_util__WEBPACK_IMPORTED_MODULE_0__["isInBounds"])(currPos)) {
-    currPos[0] += dx / 5;
-    currPos[1] += dy / 5;
+    currPos[0] += dx / 10;
+    currPos[1] += dy / 10;
 
     for (var i = 0; i < mirrors.length; i++) {
       if (Object(_util__WEBPACK_IMPORTED_MODULE_0__["collidesWithObject"])(currPos, mirrors[i])) {
         if (Object(_util__WEBPACK_IMPORTED_MODULE_0__["pointIsOnMirrorEdge"])(currPos, mirrors[i])) {
-          console.log("hit a mirror");
           return ({endPos: currPos, angle: mirrors[i].reflectedAngle(angle), beamEnd: false});
         } else {
-          console.log("not a mirror");
           return ({endPos: currPos, angle: angle, beamEnd: true});
         }
       }
     }
     for (var i = 0; i < lasers.length; i++) {
       if (Object(_util__WEBPACK_IMPORTED_MODULE_0__["collidesWithObject"])(currPos, lasers[i])) {
-        console.log("not a mirror");
         return ({endPos: currPos, angle: angle, beamEnd: true});
       }
     }
   }
 
-  console.log("border");
   return ({endPos: currPos, angle: angle, beamEnd: true});
 }
 
@@ -175,12 +171,10 @@ const getBeams = (laser, lasers, mirrors) => {
   let angle = laser.rad;
   let beamEnd = false;
   let endPos;
-  console.log(laserPos);
 
   let startPos = laserPos.slice(0);
   while (beamEnd === false) {
     ({endPos, angle, beamEnd} = getCollision(startPos, angle, lasers, mirrors));
-    console.log(startPos, endPos);
     drawBeam(startPos, endPos);
     startPos = endPos.slice(0);
   }
@@ -213,22 +207,26 @@ class Game {
     this.mirrors = [];
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
-    this.currentSprite = [];
-
-    this.scaleByDevicePixelRatio(600);
+    this.currentSprite;
 
     this.addListeners();
   }
 
-  scaleByDevicePixelRatio(canvasSize) {
-    this.canvas.style.width = canvasSize + "px";
-    this.canvas.style.height = canvasSize + "px";
+  scaleByDevicePixelRatio(canvasSizeX, canvasSizeY) {
+    this.canvas.style.width = canvasSizeX + "px";
+    this.canvas.style.height = canvasSizeY + "px";
 
     const scale = window.devicePixelRatio;
-    this.canvas.width = canvasSize * scale;
-    this.canvas.height = canvasSize * scale;
+    this.canvas.width = canvasSizeX * scale;
+    this.canvas.height = canvasSizeY * scale;
 
     this.ctx.scale(scale, scale);
+  }
+
+  resizeCanvas() {
+    this.scaleByDevicePixelRatio(window.innerWidth, window.innerHeight)
+
+    this.renderEntities();
   }
 
   run() {
@@ -239,8 +237,8 @@ class Game {
     this.addMirror(100, 400, 270);
     this.addMirror(400, 40);
     this.addMirror(210, 500, 180);
-    this.renderEntities();
-    this.currentSprite[0] = this.lasers[1];
+    this.resizeCanvas();
+    this.currentSprite = this.lasers[1];
   }
 
   renderEntities() {
@@ -279,39 +277,29 @@ class Game {
       return [x, y];
   }
 
-  rectangleMouseCollision(cursorPos, sprite) {
-    return (
-      cursorPos[0] >= sprite.x && cursorPos[0] <= sprite.x + sprite.width &&
-      cursorPos[1] >= sprite.y && cursorPos[1] <= sprite.y + sprite.height
-    );
-  }
-
   addListeners() {
-    document.addEventListener("keydown", event => {
+    let turnInterval = null;
+
+    document.addEventListener("keypress", event => {
       switch (event.code) {
         case "ArrowLeft":
         case "KeyA":
-          if (this.currentSprite[0] instanceof _laser__WEBPACK_IMPORTED_MODULE_0__["default"]) {
-            this.currentSprite[0].rotateSprite(-0.1);
-          } else {
-            this.currentSprite[0].rotateSprite(-90);
-          }
+          this.currentSprite.rotateSprite("counterclockwise")
           this.renderEntities();
           break;
         case "ArrowRight":
         case "KeyD":
-          if (this.currentSprite[0] instanceof _laser__WEBPACK_IMPORTED_MODULE_0__["default"]) {
-            this.currentSprite[0].rotateSprite(0.1);
-          } else {
-            this.currentSprite[0].rotateSprite(90);
-          }
+          this.currentSprite.rotateSprite("clockwise");
           this.renderEntities();
           break;
         default:
       }
     });
 
+    document.addEventListener("keyup", clearInterval(turnInterval));
+
     document.addEventListener("mousedown", e => this.onMouseDown(e));
+    window.addEventListener("resize", () => this.resizeCanvas());
   }
 
   onMouseDown(e) {
@@ -319,7 +307,7 @@ class Game {
 
     for (var i = 0; i < this.lasers.length; i++) {
       if (Object(_util__WEBPACK_IMPORTED_MODULE_3__["collidesWithObject"])(this.getCursorPosition(this.canvas, e), this.lasers[i])) {
-        this.currentSprite[0] = this.lasers[i];
+        this.currentSprite = this.lasers[i];
         Array.from(document.getElementsByTagName('img')).forEach(img => img.classList.remove('active'));
         document.getElementById('laser-image').classList.add('active');
         // this.canvas.addEventListener('mousemove', this.onMouseMove);
@@ -328,7 +316,7 @@ class Game {
     }
     for (var i = 0; i < this.mirrors.length; i++) {
       if (Object(_util__WEBPACK_IMPORTED_MODULE_3__["collidesWithObject"])(this.getCursorPosition(this.canvas, e), this.mirrors[i])) {
-        this.currentSprite[0] = this.mirrors[i];
+        this.currentSprite = this.mirrors[i];
         Array.from(document.getElementsByTagName('img')).forEach(img => img.classList.remove('active'));
         document.getElementById('mirror-image').classList.add('active');
         // this.canvas.addEventListener('mousemove', this.onMouseMove);
@@ -414,6 +402,9 @@ class Mirror extends _sprite__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _laser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./laser */ "./javascripts/laser.js");
+
+
 class Sprite {
   constructor(x, y, ctx, deg, url) {
     this.width = 50;
@@ -447,8 +438,14 @@ class Sprite {
     this.ctx.translate(-this.x - this.width / 2, -this.y - this.height / 2);
   }
 
-  rotateSprite(deg) {
-    this.rad += deg * Math.PI / 180;
+  rotateSprite(dir) {
+    const mult = dir === "clockwise" ? 1 : -1;
+
+    if (this instanceof _laser__WEBPACK_IMPORTED_MODULE_0__["default"]) {
+      this.rad += mult * 0.5 * Math.PI / 180;
+    } else {
+      this.rad += mult * 90 * Math.PI / 180;
+    }
   }
 }
 
@@ -515,7 +512,7 @@ const pointIsOnMirrorEdge = (pos, mirror) => {
 
   const dist = Math.abs((y2 - y1)*x0 - (x2 - x1)*y0 + x2*y1 - y2*x1) / mirror.width;
 
-  return (dist <=  .75);
+  return (dist <=  .2);
 }
 
 const collidesWithObject = (pos, object) => {

@@ -28,29 +28,25 @@ function getCollision(startPos, angle, lasers, mirrors) {
   const dy = Math.sin(angle);
 
   while (isInBounds(currPos)) {
-    currPos[0] += dx / 5;
-    currPos[1] += dy / 5;
+    currPos[0] += dx / 10;
+    currPos[1] += dy / 10;
 
     for (var i = 0; i < mirrors.length; i++) {
       if (collidesWithObject(currPos, mirrors[i])) {
         if (pointIsOnMirrorEdge(currPos, mirrors[i])) {
-          console.log("hit a mirror");
           return ({endPos: currPos, angle: mirrors[i].reflectedAngle(angle), beamEnd: false});
         } else {
-          console.log("not a mirror");
           return ({endPos: currPos, angle: angle, beamEnd: true});
         }
       }
     }
     for (var i = 0; i < lasers.length; i++) {
       if (collidesWithObject(currPos, lasers[i])) {
-        console.log("not a mirror");
         return ({endPos: currPos, angle: angle, beamEnd: true});
       }
     }
   }
 
-  console.log("border");
   return ({endPos: currPos, angle: angle, beamEnd: true});
 }
 
@@ -59,12 +55,10 @@ export const getBeams = (laser, lasers, mirrors) => {
   let angle = laser.rad;
   let beamEnd = false;
   let endPos;
-  console.log(laserPos);
 
   let startPos = laserPos.slice(0);
   while (beamEnd === false) {
     ({endPos, angle, beamEnd} = getCollision(startPos, angle, lasers, mirrors));
-    console.log(startPos, endPos);
     drawBeam(startPos, endPos);
     startPos = endPos.slice(0);
   }

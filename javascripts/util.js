@@ -42,7 +42,7 @@ export const pointIsOnMirrorEdge = (pos, mirror) => {
 
   const dist = Math.abs((y2 - y1)*x0 - (x2 - x1)*y0 + x2*y1 - y2*x1) / mirror.width;
 
-  return (dist <=  .75);
+  return (dist <=  .2);
 }
 
 export const collidesWithObject = (pos, object) => {
