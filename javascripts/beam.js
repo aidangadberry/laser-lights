@@ -4,6 +4,7 @@ import {
   pointIsOnMirrorEdge,
   collidesWithObject
 } from './util';
+import Mirror from './mirror';
 
 function drawBeam(startPos, endPos) {
   const ctx = document.getElementById('canvas').getContext('2d');
@@ -11,7 +12,6 @@ function drawBeam(startPos, endPos) {
   ctx.beginPath();
   ctx.moveTo(startPos[0], startPos[1]);
   ctx.lineTo(endPos[0], endPos[1]);
-
 
   ctx.strokeStyle = "#F00";
   ctx.shadowBlur = 15;
@@ -21,8 +21,7 @@ function drawBeam(startPos, endPos) {
   ctx.stroke();
 }
 
-
-function getCollision(startPos, angle, lasers, mirrors) {
+function getBeamCollision(startPos, angle, entities) {
   let currPos = startPos.slice(0);
   const dx = Math.cos(angle);
   const dy = Math.sin(angle);
@@ -31,18 +30,17 @@ function getCollision(startPos, angle, lasers, mirrors) {
     currPos[0] += dx / 10;
     currPos[1] += dy / 10;
 
-    for (var i = 0; i < mirrors.length; i++) {
-      if (collidesWithObject(currPos, mirrors[i])) {
-        if (pointIsOnMirrorEdge(currPos, mirrors[i])) {
-          return ({endPos: currPos, angle: mirrors[i].reflectedAngle(angle), beamEnd: false});
-        } else {
-          return ({endPos: currPos, angle: angle, beamEnd: true});
+    for (var i = 0; i < entities.length; i++) {
+      const entity = entities[i];
+      
+      if (collidesWithObject(currPos, entities[i])) {
+        if (entity instanceof Mirror) {
+          if (pointIsOnMirrorEdge(currPos, entity)) {
+            return ({ endPos: currPos, angle: entity.reflectedAngle(angle), beamEnd: false });
+          }
         }
-      }
-    }
-    for (var i = 0; i < lasers.length; i++) {
-      if (collidesWithObject(currPos, lasers[i])) {
-        return ({endPos: currPos, angle: angle, beamEnd: true});
+
+        return ({ endPos: currPos, angle: angle, beamEnd: true });
       }
     }
   }
@@ -50,15 +48,15 @@ function getCollision(startPos, angle, lasers, mirrors) {
   return ({endPos: currPos, angle: angle, beamEnd: true});
 }
 
-export const getBeams = (laser, lasers, mirrors) => {
+export const getBeams = (laser, entities) => {
   let laserPos = getRotatedLaserPos(laser.x, laser.y, laser.width, laser.height, laser.rad);
   let angle = laser.rad;
   let beamEnd = false;
   let endPos;
-
   let startPos = laserPos.slice(0);
+  
   while (beamEnd === false) {
-    ({endPos, angle, beamEnd} = getCollision(startPos, angle, lasers, mirrors));
+    ({endPos, angle, beamEnd} = getBeamCollision(startPos, angle, entities));
     drawBeam(startPos, endPos);
     startPos = endPos.slice(0);
   }

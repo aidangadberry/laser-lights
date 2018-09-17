@@ -119,6 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getBeams", function() { return getBeams; });
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util */ "./javascripts/util.js");
+/* harmony import */ var _mirror__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./mirror */ "./javascripts/mirror.js");
+
 
 
 function drawBeam(startPos, endPos) {
@@ -128,7 +130,6 @@ function drawBeam(startPos, endPos) {
   ctx.moveTo(startPos[0], startPos[1]);
   ctx.lineTo(endPos[0], endPos[1]);
 
-
   ctx.strokeStyle = "#F00";
   ctx.shadowBlur = 15;
   ctx.shadowColor = "#F00"
@@ -137,8 +138,7 @@ function drawBeam(startPos, endPos) {
   ctx.stroke();
 }
 
-
-function getCollision(startPos, angle, lasers, mirrors) {
+function getBeamCollision(startPos, angle, entities) {
   let currPos = startPos.slice(0);
   const dx = Math.cos(angle);
   const dy = Math.sin(angle);
@@ -147,18 +147,17 @@ function getCollision(startPos, angle, lasers, mirrors) {
     currPos[0] += dx / 10;
     currPos[1] += dy / 10;
 
-    for (var i = 0; i < mirrors.length; i++) {
-      if (Object(_util__WEBPACK_IMPORTED_MODULE_0__["collidesWithObject"])(currPos, mirrors[i])) {
-        if (Object(_util__WEBPACK_IMPORTED_MODULE_0__["pointIsOnMirrorEdge"])(currPos, mirrors[i])) {
-          return ({endPos: currPos, angle: mirrors[i].reflectedAngle(angle), beamEnd: false});
-        } else {
-          return ({endPos: currPos, angle: angle, beamEnd: true});
+    for (var i = 0; i < entities.length; i++) {
+      const entity = entities[i];
+      
+      if (Object(_util__WEBPACK_IMPORTED_MODULE_0__["collidesWithObject"])(currPos, entities[i])) {
+        if (entity instanceof _mirror__WEBPACK_IMPORTED_MODULE_1__["default"]) {
+          if (Object(_util__WEBPACK_IMPORTED_MODULE_0__["pointIsOnMirrorEdge"])(currPos, entity)) {
+            return ({ endPos: currPos, angle: entity.reflectedAngle(angle), beamEnd: false });
+          }
         }
-      }
-    }
-    for (var i = 0; i < lasers.length; i++) {
-      if (Object(_util__WEBPACK_IMPORTED_MODULE_0__["collidesWithObject"])(currPos, lasers[i])) {
-        return ({endPos: currPos, angle: angle, beamEnd: true});
+
+        return ({ endPos: currPos, angle: angle, beamEnd: true });
       }
     }
   }
@@ -166,15 +165,15 @@ function getCollision(startPos, angle, lasers, mirrors) {
   return ({endPos: currPos, angle: angle, beamEnd: true});
 }
 
-const getBeams = (laser, lasers, mirrors) => {
+const getBeams = (laser, entities) => {
   let laserPos = Object(_util__WEBPACK_IMPORTED_MODULE_0__["getRotatedLaserPos"])(laser.x, laser.y, laser.width, laser.height, laser.rad);
   let angle = laser.rad;
   let beamEnd = false;
   let endPos;
-
   let startPos = laserPos.slice(0);
+  
   while (beamEnd === false) {
-    ({endPos, angle, beamEnd} = getCollision(startPos, angle, lasers, mirrors));
+    ({endPos, angle, beamEnd} = getBeamCollision(startPos, angle, entities));
     drawBeam(startPos, endPos);
     startPos = endPos.slice(0);
   }
@@ -203,8 +202,7 @@ __webpack_require__.r(__webpack_exports__);
 
 class Game {
   constructor(canvas) {
-    this.lasers = [];
-    this.mirrors = [];
+    this.entities = [];
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     this.currentSprite;
@@ -238,40 +236,33 @@ class Game {
     this.addMirror(400, 40);
     this.addMirror(210, 500, 180);
     this.resizeCanvas();
-    this.currentSprite = this.lasers[1];
+    this.currentSprite = this.entities[0];
   }
 
   renderEntities() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    
-    for (var i = 0; i < this.lasers.length; i++) {
-      let laser = this.lasers[i]
-      Object(_beam__WEBPACK_IMPORTED_MODULE_2__["getBeams"])(laser, this.lasers, this.mirrors);
-    }
 
-    for (var i = 0; i < this.mirrors.length; i++) {
-      this.mirrors[i].draw();
-    }
+    for (var i = 0; i < this.entities.length; i++) {
+      const entity = this.entities[i];
 
-    for (var i = 0; i < this.lasers.length; i++) {
-      this.lasers[i].draw();
+      if (entity instanceof _laser__WEBPACK_IMPORTED_MODULE_0__["default"]) {
+        Object(_beam__WEBPACK_IMPORTED_MODULE_2__["getBeams"])(entity, this.entities);
+      }
+
+      entity.draw();
     }
   }
 
   addLaser(x, y, deg = 0) {
-    const laser = new _laser__WEBPACK_IMPORTED_MODULE_0__["default"](x, y, this.ctx, deg);
-
-    this.lasers.push(laser);
+    this.entities.push(new _laser__WEBPACK_IMPORTED_MODULE_0__["default"](x, y, this.ctx, deg));
   }
 
   addMirror(x, y, deg = 0) {
-    const mirror = new _mirror__WEBPACK_IMPORTED_MODULE_1__["default"](x, y, this.ctx, deg);
-
-    this.mirrors.push(mirror);
+    this.entities.push(new _mirror__WEBPACK_IMPORTED_MODULE_1__["default"](x, y, this.ctx, deg));
   }
 
-  getCursorPosition(canvas, e) {
-      var bounds = canvas.getBoundingClientRect();
+  getCursorPosition(e) {
+      var bounds = this.canvas.getBoundingClientRect();
       var x = e.clientX - bounds.left;
       var y = e.clientY - bounds.top;
       return [x, y];
@@ -296,8 +287,6 @@ class Game {
       }
     });
 
-    document.addEventListener("keyup", clearInterval(turnInterval));
-
     document.addEventListener("mousedown", e => this.onMouseDown(e));
     window.addEventListener("resize", () => this.resizeCanvas());
   }
@@ -305,22 +294,12 @@ class Game {
   onMouseDown(e) {
     e.stopPropagation();
 
-    for (var i = 0; i < this.lasers.length; i++) {
-      if (Object(_util__WEBPACK_IMPORTED_MODULE_3__["collidesWithObject"])(this.getCursorPosition(this.canvas, e), this.lasers[i])) {
-        this.currentSprite = this.lasers[i];
-        Array.from(document.getElementsByTagName('img')).forEach(img => img.classList.remove('active'));
-        document.getElementById('laser-image').classList.add('active');
-        // this.canvas.addEventListener('mousemove', this.onMouseMove);
-        return;
-      }
-    }
-    for (var i = 0; i < this.mirrors.length; i++) {
-      if (Object(_util__WEBPACK_IMPORTED_MODULE_3__["collidesWithObject"])(this.getCursorPosition(this.canvas, e), this.mirrors[i])) {
-        this.currentSprite = this.mirrors[i];
-        Array.from(document.getElementsByTagName('img')).forEach(img => img.classList.remove('active'));
-        document.getElementById('mirror-image').classList.add('active');
-        // this.canvas.addEventListener('mousemove', this.onMouseMove);
-        return;
+    for (var i = 0; i < this.entities.length; i++) {
+      const entity = this.entities[i];
+      
+      if (Object(_util__WEBPACK_IMPORTED_MODULE_3__["collidesWithObject"])(this.getCursorPosition(e), entity)) {
+        this.currentSprite = entity;
+        // ADD ACTIVE CLASS TO CURRENT SPRITE ICON
       }
     }
   }
