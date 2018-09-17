@@ -1,3 +1,5 @@
+import Laser from './laser';
+
 class Sprite {
   constructor(x, y, ctx, deg, url) {
     this.width = 50;
@@ -31,8 +33,14 @@ class Sprite {
     this.ctx.translate(-this.x - this.width / 2, -this.y - this.height / 2);
   }
 
-  rotateSprite(deg) {
-    this.rad += deg * Math.PI / 180;
+  rotateSprite(dir) {
+    const mult = dir === "clockwise" ? 1 : -1;
+
+    if (this instanceof Laser) {
+      this.rad += mult * 0.5 * Math.PI / 180;
+    } else {
+      this.rad += mult * 90 * Math.PI / 180;
+    }
   }
 }
 

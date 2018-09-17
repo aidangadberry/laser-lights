@@ -9,7 +9,7 @@ class Game {
     this.mirrors = [];
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
-    this.currentSprite = [];
+    this.currentSprite;
 
     this.scaleByDevicePixelRatio(600);
 
@@ -42,7 +42,7 @@ class Game {
     this.addMirror(400, 40);
     this.addMirror(210, 500, 180);
     this.resizeCanvas();
-    this.currentSprite[0] = this.lasers[1];
+    this.currentSprite = this.lasers[1];
   }
 
   renderEntities() {
@@ -95,20 +95,12 @@ class Game {
       switch (event.code) {
         case "ArrowLeft":
         case "KeyA":
-          if (this.currentSprite[0] instanceof Laser) {
-            turnInterval = setInterval(this.currentSprite[0].rotateSprite(-0.5), 1);
-          } else {
-            this.currentSprite[0].rotateSprite(-90);
-          }
+          this.currentSprite.rotateSprite("counterclockwise")
           this.renderEntities();
           break;
         case "ArrowRight":
         case "KeyD":
-          if (this.currentSprite[0] instanceof Laser) {
-            this.currentSprite[0].rotateSprite(0.1);
-          } else {
-            this.currentSprite[0].rotateSprite(90);
-          }
+          this.currentSprite.rotateSprite("clockwise");
           this.renderEntities();
           break;
         default:
@@ -126,7 +118,7 @@ class Game {
 
     for (var i = 0; i < this.lasers.length; i++) {
       if (collidesWithObject(this.getCursorPosition(this.canvas, e), this.lasers[i])) {
-        this.currentSprite[0] = this.lasers[i];
+        this.currentSprite = this.lasers[i];
         Array.from(document.getElementsByTagName('img')).forEach(img => img.classList.remove('active'));
         document.getElementById('laser-image').classList.add('active');
         // this.canvas.addEventListener('mousemove', this.onMouseMove);
@@ -135,7 +127,7 @@ class Game {
     }
     for (var i = 0; i < this.mirrors.length; i++) {
       if (collidesWithObject(this.getCursorPosition(this.canvas, e), this.mirrors[i])) {
-        this.currentSprite[0] = this.mirrors[i];
+        this.currentSprite = this.mirrors[i];
         Array.from(document.getElementsByTagName('img')).forEach(img => img.classList.remove('active'));
         document.getElementById('mirror-image').classList.add('active');
         // this.canvas.addEventListener('mousemove', this.onMouseMove);
