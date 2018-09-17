@@ -8,7 +8,15 @@ class Game {
     this.entities = [];
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
-    this.currentSprite;
+
+    this.mouseX;
+    this.mouseY;
+    this.dragging = false;
+    this.dragX;
+    this.dragY;
+
+    this.currentEntity;
+
 
     this.addListeners();
   }
@@ -25,6 +33,7 @@ class Game {
   }
 
   resizeCanvas() {
+    console.log("resize");
     this.scaleByDevicePixelRatio(window.innerWidth, window.innerHeight)
 
     this.renderEntities();
@@ -39,7 +48,7 @@ class Game {
     this.addMirror(400, 40);
     this.addMirror(210, 500, 180);
     this.resizeCanvas();
-    this.currentSprite = this.entities[0];
+    this.currentEntity = this.entities[0];
   }
 
   renderEntities() {
@@ -49,7 +58,9 @@ class Game {
       const entity = this.entities[i];
 
       if (entity instanceof Laser) {
-        getBeams(entity, this.entities);
+        // if (!this.dragging) {
+          getBeams(entity, this.entities);
+        // }
       }
 
       entity.draw();
@@ -64,48 +75,91 @@ class Game {
     this.entities.push(new Mirror(x, y, this.ctx, deg));
   }
 
-  getCursorPosition(e) {
-      var bounds = this.canvas.getBoundingClientRect();
-      var x = e.clientX - bounds.left;
-      var y = e.clientY - bounds.top;
-      return [x, y];
+  setCursorPosition(e) {
+      const bounds = this.canvas.getBoundingClientRect();
+      this.mouseX = e.clientX - bounds.left;
+      this.mouseY = e.clientY - bounds.top;
+      return [this.mouseX, this.mouseY];
   }
 
   addListeners() {
-    let turnInterval = null;
+    this.startDrag = this.startDrag.bind(this);
+    this.dragEntity = this.dragEntity.bind(this);
+    this.endDrag = this.endDrag.bind(this);
+    this.resizeCanvas = this.resizeCanvas.bind(this);
 
     document.addEventListener("keypress", event => {
       switch (event.code) {
         case "ArrowLeft":
         case "KeyA":
-          this.currentSprite.rotateSprite("counterclockwise")
+          this.currentEntity.rotateSprite("counterclockwise")
           this.renderEntities();
           break;
         case "ArrowRight":
         case "KeyD":
-          this.currentSprite.rotateSprite("clockwise");
+          this.currentEntity.rotateSprite("clockwise");
           this.renderEntities();
           break;
         default:
       }
     });
 
-    document.addEventListener("mousedown", e => this.onMouseDown(e));
-    window.addEventListener("resize", () => this.resizeCanvas());
+    window.addEventListener("resize", this.resizeCanvas);
+    document.addEventListener("mousedown", this.startDrag);
   }
 
-  onMouseDown(e) {
+  startDrag(e) {
+    console.log("Start Drag");
+    
     e.stopPropagation();
+    this.setCursorPosition(e);
 
     for (var i = 0; i < this.entities.length; i++) {
       const entity = this.entities[i];
       
-      if (collidesWithObject(this.getCursorPosition(e), entity)) {
-        this.currentSprite = entity;
+      if (collidesWithObject([this.mouseX, this.mouseY], entity)) {
+        this.currentEntity = entity;
         // ADD ACTIVE CLASS TO CURRENT SPRITE ICON
+
+        this.dragging = true;
+        this.dragX = this.mouseX - entity.x;
+        this.dragY = this.mouseY - entity.y;
       }
     }
+
+    if (this.dragging) {
+      document.addEventListener("mousemove", this.dragEntity, false);
+    }
+
+    document.removeEventListener("mousedown", this.startDrag, false);
+    document.addEventListener("mouseup", this.endDrag, false);
   }
+
+  dragEntity(e) {
+    console.log("Move Mouse");
+    this.setCursorPosition(e);
+    
+    this.currentEntity.x = this.mouseX - this.dragX;
+    this.currentEntity.y = this.mouseY - this.dragY;
+
+    this.renderEntities();
+  }
+
+  endDrag(e) {
+    console.log("End Drag");
+    
+    document.addEventListener("mousedown", this.startDrag, false);
+    document.removeEventListener("mouseup", this.endDrag, false);
+
+    if (this.dragging) {
+      this.dragging = false;
+      console.log("Remove");
+      document.removeEventListener("mousemove", this.dragEntity, false);
+    }
+
+    this.renderEntities();
+  }
+
 
   // onMouseMove(e) {
   //   e.stopPropagation();
