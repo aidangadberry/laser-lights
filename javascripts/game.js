@@ -35,7 +35,12 @@ class Game {
     this.currentEntity = this.entities[0];
   }
 
-  createControlPanel() {}
+  createControlPanel() {
+    const ul = document.getElementById("panel-list");
+    const colorPanel = document.createElement("li");
+    
+
+  }
 
   addLaser(x, y, deg = 0) {
     this.entities.push(new Laser(x, y, this.ctx, deg));
