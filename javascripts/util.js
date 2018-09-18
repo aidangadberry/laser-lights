@@ -35,10 +35,11 @@ export const isInBounds = pos => {
 export const pointIsOnMirrorEdge = (pos, mirror) => {
   const x0 = getRotatedPos(pos, mirror.getCenterPos(), -mirror.rad)[0];
   const y0 = getRotatedPos(pos, mirror.getCenterPos(), -mirror.rad)[1];
-  const x1 = mirror.corners()[0][0];
-  const y1 = mirror.corners()[0][1];
-  const x2 = mirror.corners()[1][0];
-  const y2 = mirror.corners()[1][1];
+  const corners = mirror.corners();
+  const x1 = corners[0][0];
+  const y1 = corners[0][1];
+  const x2 = corners[1][0];
+  const y2 = corners[1][1];
 
   const dist = Math.abs((y2 - y1)*x0 - (x2 - x1)*y0 + x2*y1 - y2*x1) / mirror.width;
 

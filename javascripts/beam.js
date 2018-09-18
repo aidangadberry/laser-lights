@@ -17,7 +17,7 @@ function drawBeam(startPos, endPos) {
   ctx.shadowBlur = 15;
   ctx.shadowColor = "#F00"
   
-  ctx.lineWidth = 1;
+  ctx.lineWidth = 1.5;
   ctx.stroke();
 }
 
@@ -54,7 +54,7 @@ export const getBeams = (laser, entities) => {
   let beamEnd = false;
   let endPos;
   let startPos = laserPos.slice(0);
-  
+
   while (beamEnd === false) {
     ({endPos, angle, beamEnd} = getBeamCollision(startPos, angle, entities));
     drawBeam(startPos, endPos);
