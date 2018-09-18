@@ -355,6 +355,7 @@ class Game {
     }
 
     if (this.dragging) {
+      this.canvas.style.setProperty("cursor", "move");
       document.addEventListener("mousemove", this.dragEntity, false);
     }
 
@@ -377,6 +378,7 @@ class Game {
     document.removeEventListener("mouseup", this.endDrag, false);
 
     if (this.dragging) {
+      this.canvas.style.removeProperty("cursor");
       this.dragging = false;
       document.removeEventListener("mousemove", this.dragEntity, false);
     }

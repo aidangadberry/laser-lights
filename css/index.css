@@ -9,7 +9,9 @@ html, body {
   overflow: hidden;
 }
 
-canvas { display:block; }
+canvas { 
+  display: block;
+}
 
 .main-content-wrapper {
   display: flex;
@@ -35,8 +37,4 @@ canvas { display:block; }
 img {
   margin: 2px;
   border: 1px solid white;
-}
-
-#canvas {
-  border: 1px solid #333;
 }
