@@ -38,7 +38,7 @@ class Game {
   createControlPanel() {
     const ul = document.getElementById("panel-list");
     const colorPanel = document.createElement("li");
-    
+
 
   }
 
@@ -57,10 +57,15 @@ class Game {
     this.endDrag = this.endDrag.bind(this);
     this.resizeCanvas = this.resizeCanvas.bind(this);
     this.controls = this.controls.bind(this);
+    this.windowOnClick = this.windowOnClick.bind(this);
 
     window.addEventListener("resize", this.resizeCanvas);
     document.addEventListener("keydown", this.controls);
     document.addEventListener("mousedown", this.startDrag);
+
+    document.querySelector(".open-modal").addEventListener("click", this.toggleModal);
+    document.querySelector(".close-button").addEventListener("click", this.toggleModal);
+    window.addEventListener("click", this.windowOnClick);
   }
 
   controls(e) {
@@ -154,6 +159,17 @@ class Game {
     const bounds = this.canvas.getBoundingClientRect();
     this.mouseX = e.clientX - bounds.left;
     this.mouseY = e.clientY - bounds.top;
+  }
+
+  toggleModal() {
+    console.log("modal");
+    document.querySelector(".modal").classList.toggle("show-modal");
+  }
+
+  windowOnClick(e) {
+    if (e.target === document.querySelector(".modal")) {
+      this.toggleModal();
+    }
   }
 
   // RENDER METHODS

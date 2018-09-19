@@ -14,8 +14,8 @@
         <ul id="panel-list">
           <li>
             <div id="item-dragger">
-              <img id="laser-image" src="./images/laser.svg" alt="">
-              <img id="mirror-image" src="./images/mirror.svg" alt="">
+              <div class="item-icon"><img src="./images/laser.svg" alt=""></div>
+              <div class="item-icon"><img src="./images/mirror.svg" alt=""></div>
             </div>
           </li>
           <li>
@@ -33,9 +33,15 @@
       </div>
       <div id="info-section">
         <i class="fas fa-lightbulb"></i>
-        <i class="far fa-question-circle"></i>
+        <i class="far fa-question-circle open-modal"></i>
       </div>
       <canvas id="canvas"></canvas>
+    </div>
+    <div class="modal">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h1>Hello, I am a modal!</h1>
+      </div>
     </div>
   </body>
 </html>
