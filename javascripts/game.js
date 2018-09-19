@@ -23,12 +23,12 @@ class Game {
     this.createControlPanel();
     this.addListeners();
 
-    this.addLaser(200, 200, 312);
+    this.addLaser(200, 200, 312, "#00F");
     this.addLaser(430, 300, 140);
-    this.addMirror(300, 100);
+    this.addMirror(300, 100, 0);
     this.addMirror(310, 130, 180);
     this.addMirror(100, 400, 270);
-    this.addMirror(400, 40);
+    this.addMirror(400, 40, 0);
     this.addMirror(210, 500, 180);
 
     this.resizeCanvas();
@@ -42,11 +42,11 @@ class Game {
 
   }
 
-  addLaser(x, y, deg = 0) {
-    this.entities.push(new Laser(this.ctx, x, y, 50, 10, deg));
+  addLaser(x, y, deg, color = "#F00") {
+    this.entities.push(new Laser(this.ctx, x, y, 50, 10, deg, color));
   }
 
-  addMirror(x, y, deg = 0) {
+  addMirror(x, y, deg) {
     this.entities.push(new Mirror(this.ctx, x, y, 50, 10, deg));
   }
 

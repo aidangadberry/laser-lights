@@ -123,16 +123,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function drawBeam(startPos, endPos) {
+function drawBeam(startPos, endPos, color) {
   const ctx = document.getElementById('canvas').getContext('2d');
 
   ctx.beginPath();
   ctx.moveTo(startPos[0], startPos[1]);
   ctx.lineTo(endPos[0], endPos[1]);
 
-  ctx.strokeStyle = "#F00";
+  ctx.strokeStyle = color;
   ctx.shadowBlur = 15;
-  ctx.shadowColor = "#F00"
+  ctx.shadowColor = color;
   
   ctx.lineWidth = 1.5;
   ctx.stroke();
@@ -174,7 +174,7 @@ const getBeams = (laser, entities) => {
 
   while (beamEnd === false) {
     ({endPos, angle, beamEnd} = getBeamCollision(startPos, angle, entities));
-    drawBeam(startPos, endPos);
+    drawBeam(startPos, endPos, laser.color);
     startPos = endPos.slice(0);
   }
 }
@@ -220,12 +220,12 @@ class Game {
     this.createControlPanel();
     this.addListeners();
 
-    this.addLaser(200, 200, 312);
+    this.addLaser(200, 200, 312, "#00F");
     this.addLaser(430, 300, 140);
-    this.addMirror(300, 100);
+    this.addMirror(300, 100, 0);
     this.addMirror(310, 130, 180);
     this.addMirror(100, 400, 270);
-    this.addMirror(400, 40);
+    this.addMirror(400, 40, 0);
     this.addMirror(210, 500, 180);
 
     this.resizeCanvas();
@@ -239,11 +239,11 @@ class Game {
 
   }
 
-  addLaser(x, y, deg = 0) {
-    this.entities.push(new _laser__WEBPACK_IMPORTED_MODULE_0__["default"](this.ctx, x, y, 50, 10, deg));
+  addLaser(x, y, deg, color = "#F00") {
+    this.entities.push(new _laser__WEBPACK_IMPORTED_MODULE_0__["default"](this.ctx, x, y, 50, 10, deg, color));
   }
 
-  addMirror(x, y, deg = 0) {
+  addMirror(x, y, deg) {
     this.entities.push(new _mirror__WEBPACK_IMPORTED_MODULE_1__["default"](this.ctx, x, y, 50, 10, deg));
   }
 
