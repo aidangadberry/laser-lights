@@ -240,11 +240,11 @@ class Game {
   }
 
   addLaser(x, y, deg = 0) {
-    this.entities.push(new _laser__WEBPACK_IMPORTED_MODULE_0__["default"](x, y, this.ctx, deg));
+    this.entities.push(new _laser__WEBPACK_IMPORTED_MODULE_0__["default"](this.ctx, x, y, 50, 10, deg));
   }
 
   addMirror(x, y, deg = 0) {
-    this.entities.push(new _mirror__WEBPACK_IMPORTED_MODULE_1__["default"](x, y, this.ctx, deg));
+    this.entities.push(new _mirror__WEBPACK_IMPORTED_MODULE_1__["default"](this.ctx, x, y, 50, 10, deg));
   }
 
   // EVENT LISTENER METHODS
@@ -414,7 +414,7 @@ class Game {
 
   renderEntities() {
     for (var i = 0; i < this.entities.length; i++) {
-      this.entities[i].draw();
+      this.entities[i].render();
     }
   }
 }
@@ -439,9 +439,28 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class Laser extends _sprite__WEBPACK_IMPORTED_MODULE_0__["default"] {
-  constructor(x, y, ctx, deg) {
-    super(x, y, ctx, deg, "images/laser_entity.png");
-    this.laserPos = _util__WEBPACK_IMPORTED_MODULE_1__["getRotatedLaserPos"](this.x, this.y, this.width, this.height, this.rad);
+  constructor(ctx, x, y, width, height, deg, color = "#F00") {
+    super(ctx, x, y, width, height, deg, color);
+    this.laserPos = _util__WEBPACK_IMPORTED_MODULE_1__["getRotatedLaserPos"](
+      this.x,
+      this.y,
+      this.width,
+      this.height,
+      this.rad
+    );
+  }
+
+  drawLaser(x, y, width, height, ctx, color) {
+    ctx.fillStyle = "#FFF";
+    ctx.fillRect(x, y, width - 10, height);
+    ctx.strokeRect(x, y, width - 10, height);
+    ctx.fillStyle = color;
+    ctx.fillRect(x + width - 10, y, 10, height);
+    ctx.strokeRect(x + width - 10, y, 10, height);
+  }
+
+  render() {
+    super.draw(this.drawLaser);
   }
 }
 
@@ -463,20 +482,36 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class Mirror extends _sprite__WEBPACK_IMPORTED_MODULE_0__["default"] {
-  constructor(x, y, ctx, deg) {
-    super(x, y, ctx, deg, "images/mirror_entity.png");
+  constructor(ctx, x, y, width, height, deg) {
+    super(ctx, x, y, width, height, deg);
   }
 
   corners() {
-    return [[this.x, this.y + this.height], [this.x + this.width, this.y + this.height]];
+    return [
+      [this.x, this.y + this.height],
+      [this.x + this.width, this.y + this.height]
+    ];
   }
 
   reflectedAngle(angle) {
-    if (this.rad % (Math.PI) === 0) {
-      return (-angle)
+    if (this.rad % Math.PI === 0) {
+      return -angle;
     } else {
-      return (Math.PI - angle);
+      return Math.PI - angle;
     }
+  }
+
+  drawMirror(x, y, width, height, ctx) {
+    ctx.fillStyle = "#FFF";
+    ctx.fillRect(x, y, width, height - 4);
+    ctx.strokeRect(x, y, width, height - 4);
+    ctx.fillStyle = "#BBB";
+    ctx.fillRect(x, y + height - 4, width, 4);
+    ctx.strokeRect(x, y + height - 4, width, 4);
+  }
+
+  render() {
+    super.draw(this.drawMirror);
   }
 }
 
@@ -498,33 +533,37 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class Sprite {
-  constructor(x, y, ctx, deg, url) {
-    this.width = 50;
-    this.height = 20;
+  constructor(ctx, x, y, width, height, deg, color = null) {
+    this.ctx = ctx;
     this.x = x;
     this.y = y;
-    this.rad = deg * Math.PI / 180;
-    this.ctx = ctx;
-    this.img = new Image();
-    this.img.src = url;
-
-    this.img.onload = () => {
-      this.draw();
-    }
+    this.width = width;
+    this.height = height;
+    this.rad = (deg * Math.PI) / 180;
+    this.color = color;
   }
 
   getCenterPos() {
     return [this.x + this.width / 2, this.y + this.height / 2];
   }
 
-  draw() {
+  draw(drawShape) {
     this.ctx.shadowBlur = 0;
     this.ctx.shadowColor = "transparent";
-    
+    this.ctx.strokeStyle = "#000";
+    this.ctx.lineWidth = 1;
+
     this.ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
     this.ctx.rotate(this.rad);
 
-    this.ctx.drawImage(this.img, -this.width / 2, -this.height / 2);
+    drawShape(
+      -this.width / 2,
+      -this.height / 2,
+      this.width,
+      this.height,
+      this.ctx,
+      this.color
+    );
 
     this.ctx.rotate(2 * Math.PI - this.rad);
     this.ctx.translate(-this.x - this.width / 2, -this.y - this.height / 2);
@@ -534,9 +573,9 @@ class Sprite {
     const mult = dir === "clockwise" ? 1 : -1;
 
     if (this instanceof _laser__WEBPACK_IMPORTED_MODULE_0__["default"]) {
-      this.rad += mult * 0.5 * Math.PI / 180;
+      this.rad += (mult * 0.5 * Math.PI) / 180;
     } else {
-      this.rad += mult * 90 * Math.PI / 180;
+      this.rad += (mult * 90 * Math.PI) / 180;
     }
   }
 }

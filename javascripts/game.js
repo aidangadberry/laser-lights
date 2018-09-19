@@ -43,11 +43,11 @@ class Game {
   }
 
   addLaser(x, y, deg = 0) {
-    this.entities.push(new Laser(x, y, this.ctx, deg));
+    this.entities.push(new Laser(this.ctx, x, y, 50, 10, deg));
   }
 
   addMirror(x, y, deg = 0) {
-    this.entities.push(new Mirror(x, y, this.ctx, deg));
+    this.entities.push(new Mirror(this.ctx, x, y, 50, 10, deg));
   }
 
   // EVENT LISTENER METHODS
@@ -217,7 +217,7 @@ class Game {
 
   renderEntities() {
     for (var i = 0; i < this.entities.length; i++) {
-      this.entities[i].draw();
+      this.entities[i].render();
     }
   }
 }
