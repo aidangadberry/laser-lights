@@ -25,13 +25,16 @@ canvas {
 #info-section {
   position: absolute;
   right: 0px;
-  padding: 10px;
+  padding: 15px;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  width: 85px;
 }
 
 i {
   font-size: 40px;
   color: #999;
-  padding: 5px;
 }
 
 i:hover {
@@ -45,32 +48,39 @@ i:hover {
   position: absolute;
   left: 0px;
   background-color: #BBB;
-  border: 2px solid #666;
-  border-left: none;
-  border-top-right-radius: 10px;
+  border-right: 2px solid #666;
+  border-bottom: 2px solid #666;
   border-bottom-right-radius: 10px;
 }
 
 #panel-list {
   display: flex;
   flex-direction: column;
-
+  list-style: none;
 }
 
 #item-dragger {
   display: flex;
-  align-items: center;
-  padding: 3px;
+  justify-content: space-between;
+  align-content: center;
+  padding: 5px;
+}
+
+img {
+  width: 36px;
+  top: 50%;
+  bottom: 50%;
+  object-fit: contain;
 }
 
 #color-picker {
   display: grid;
-  grid-gap: 5px;
+  grid-gap: 8px;
   padding: 5px;
 }
 
 .color-choice {
-  border: 2px solid transparent;
+  border: 2px dashed transparent;
   border-radius: 5px;
   width: 32px;
   height: 32px;
@@ -103,11 +113,6 @@ i:hover {
 
 .active {
   border: 1px dashed red;
-}
-
-img {
-  margin: 2px;
-  border: 1px solid white;
 }
 
 /* MODAL */
