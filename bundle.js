@@ -263,6 +263,11 @@ class Game {
     document.querySelector(".open-modal").addEventListener("click", this.toggleModal);
     document.querySelector(".close-button").addEventListener("click", this.toggleModal);
     window.addEventListener("click", this.windowOnClick);
+
+    // document.getElementById("red").addEventListener("click",);
+    // document.getElementById("yellow").addEventListener("click",);
+    // document.getElementById("green").addEventListener("click",);
+    // document.getElementById("blue").addEventListener("click",);
   }
 
   controls(e) {

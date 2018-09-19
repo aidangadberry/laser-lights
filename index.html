@@ -14,8 +14,8 @@
         <ul id="panel-list">
           <li>
             <div id="item-dragger">
-                <img src="./images/laser.svg" alt="">
-                <img src="./images/mirror.svg" alt="">
+                <img draggable="false" src="./images/laser.svg" alt="">
+                <img draggable="false" src="./images/mirror.svg" alt="">
             </div>
           </li>
           <li>
@@ -37,10 +37,17 @@
       </div>
       <canvas id="canvas"></canvas>
     </div>
-    <div class="modal">
+    <div class="modal show-modal">
       <div class="modal-content">
         <span class="close-button">&times;</span>
-        <h1>Hello, I am a modal!</h1>
+        <h1>Laser Lights</h1>
+        <br />
+        <h2>Instructions:</h2>
+        <p>- Drag objects on the screen by clicking and holding</p>
+        <p>- Rotate objects using A / &#x21e6; and D / &#x21e8;</p>
+        <p>- Add or remove objects using the control panel</p>
+        <p>- Change laser colors or mirror sizes</p>
+        <p>- Turn out the <i class="fas fa-lightbulb" style="font-size: 17px;"></i> lights!</p>
       </div>
     </div>
   </body>

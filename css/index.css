@@ -64,6 +64,7 @@ i:hover {
   justify-content: space-between;
   align-content: center;
   padding: 5px;
+  user-select: none;
 }
 
 img {
@@ -71,6 +72,7 @@ img {
   top: 50%;
   bottom: 50%;
   object-fit: contain;
+  cursor: pointer;
 }
 
 #color-picker {
@@ -134,9 +136,11 @@ img {
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
-  padding: 1rem 1.5rem;
-  width: 24rem;
-  border-radius: 0.5rem;
+  padding: 15px;
+  width: 25rem;
+  border-radius: 10px;
+
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 .close-button {
   float: right;
