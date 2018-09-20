@@ -89,16 +89,18 @@ class Game {
     e.stopPropagation();
     this.setCursorPosition(e);
 
-    if (type === "laser") {
-      this.addLaser(this.mouseX, this.mouseY, deg, color);
-    } else {
-      this.addMirror(this.mouseX, this.mouseY, width, height, deg);
-    }
     this.dragX = width / 2;
     this.dragY = height / 2;
+
+    if (type === "laser") {
+      this.addLaser(this.mouseX - this.dragX, this.mouseY - this.dragY, deg, color);
+    } else {
+      this.addMirror(this.mouseX - this.dragX, this.mouseY - this.dragY, width, height, deg);
+    }
     this.dragging = true;
 
     this.currentEntity = this.entities[this.entities.length - 1];
+    this.drawGame();
     document.addEventListener("mousemove", this.dragEntity);
     document.addEventListener("mousedown", this.endDrag);
   }
@@ -170,11 +172,16 @@ class Game {
   endDrag(e) {
     document.addEventListener("mousedown", this.startDrag, false);
     document.removeEventListener("mouseup", this.endDrag, false);
+    e.stopPropagation();
 
     if (this.dragging) {
       this.canvas.style.removeProperty("cursor");
       this.dragging = false;
       document.removeEventListener("mousemove", this.dragEntity, false);
+
+      if (e.target === document.getElementById("remove-entity")) {
+        this.entities.pop();
+      }
     }
     
     this.drawGame();
