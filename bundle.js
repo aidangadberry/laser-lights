@@ -209,7 +209,7 @@ class Game {
     this.currentEntity;
     this.addEntityProperties = {
       type: "laser",
-      color: "#F00",
+      color: "red",
       width: 50,
       height: 10,
       deg: 0
@@ -227,7 +227,7 @@ class Game {
     this.createControlPanel();
     this.addListeners();
 
-    this.addLaser(200, 200, 312, "#00F");
+    this.addLaser(200, 200, 312, "blue");
     this.addLaser(430, 300, 140);
     this.addMirror(300, 100, 50, 10, 0);
     this.addMirror(310, 130, 50, 10, 180);
@@ -247,10 +247,7 @@ class Game {
   }
 
   addLaser(x, y, deg, color = "#F00") {
-    console.log(this.entities);
     this.entities.push(new _laser__WEBPACK_IMPORTED_MODULE_0__["default"](this.ctx, x, y, 50, 10, deg, color));
-    console.log("Add laser");
-    console.log(this.entities);
   }
 
   addMirror(x, y, width, height, deg) {
@@ -266,6 +263,7 @@ class Game {
     this.controls = this.controls.bind(this);
     this.windowOnClick = this.windowOnClick.bind(this);
     this.addEntity = this.addEntity.bind(this);
+    this.updateColor = this.updateColor.bind(this);
 
     window.addEventListener("resize", this.resizeCanvas);
     document.addEventListener("keydown", this.controls);
@@ -277,14 +275,13 @@ class Game {
 
     document.getElementById("add-entity").addEventListener("click", this.addEntity);
 
-    // document.getElementById("red").addEventListener("click",);
-    // document.getElementById("yellow").addEventListener("click",);
-    // document.getElementById("green").addEventListener("click",);
-    // document.getElementById("blue").addEventListener("click",);
+    document.getElementById("red").addEventListener("click", this.updateColor);
+    document.getElementById("yellow").addEventListener("click", this.updateColor);
+    document.getElementById("green").addEventListener("click", this.updateColor);
+    document.getElementById("blue").addEventListener("click", this.updateColor);
   }
 
   addEntity(e) {
-    console.log(this.addEntityProperties);
     const { type, color, width, height, deg } = this.addEntityProperties;
     e.stopPropagation();
     this.setCursorPosition(e);
@@ -301,6 +298,12 @@ class Game {
     this.currentEntity = this.entities[this.entities.length - 1];
     document.addEventListener("mousemove", this.dragEntity);
     document.addEventListener("mousedown", this.endDrag);
+  }
+
+  updateColor(e) {
+    document.getElementById(this.addEntityProperties.color).classList.remove("selected-color");
+    this.addEntityProperties.color = e.target.id;
+    e.target.classList.add("selected-color");
   }
 
   controls(e) {
@@ -370,7 +373,7 @@ class Game {
       this.dragging = false;
       document.removeEventListener("mousemove", this.dragEntity, false);
     }
-
+    
     this.drawGame();
   }
 

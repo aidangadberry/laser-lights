@@ -101,8 +101,11 @@ img {
   cursor: pointer;
 }
 
-#red {
+.selected-color {
   border-color: black;
+}
+
+#red {
   grid-column: 1 / 2;
   grid-row: 1 / 2;
   background-color: #F00;
