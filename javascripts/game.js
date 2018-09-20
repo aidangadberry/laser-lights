@@ -10,6 +10,13 @@ class Game {
 
     this.entities = [];
     this.currentEntity;
+    this.addEntityProperties = {
+      type: "laser",
+      color: "#F00",
+      width: 50,
+      height: 10,
+      deg: 0
+    }
 
     this.mouseX;
     this.mouseY;
@@ -25,11 +32,11 @@ class Game {
 
     this.addLaser(200, 200, 312, "#00F");
     this.addLaser(430, 300, 140);
-    this.addMirror(300, 100, 0);
-    this.addMirror(310, 130, 180);
-    this.addMirror(100, 400, 270);
-    this.addMirror(400, 40, 0);
-    this.addMirror(210, 500, 180);
+    this.addMirror(300, 100, 50, 10, 0);
+    this.addMirror(310, 130, 50, 10, 180);
+    this.addMirror(100, 400, 50, 10, 270);
+    this.addMirror(400, 40, 50, 10, 0);
+    this.addMirror(210, 500, 50, 10, 180);
 
     this.resizeCanvas();
     this.currentEntity = this.entities[0];
@@ -43,11 +50,14 @@ class Game {
   }
 
   addLaser(x, y, deg, color = "#F00") {
+    console.log(this.entities);
     this.entities.push(new Laser(this.ctx, x, y, 50, 10, deg, color));
+    console.log("Add laser");
+    console.log(this.entities);
   }
 
-  addMirror(x, y, deg) {
-    this.entities.push(new Mirror(this.ctx, x, y, 50, 10, deg));
+  addMirror(x, y, width, height, deg) {
+    this.entities.push(new Mirror(this.ctx, x, y, width, height, deg));
   }
 
   // EVENT LISTENER METHODS
@@ -58,6 +68,7 @@ class Game {
     this.resizeCanvas = this.resizeCanvas.bind(this);
     this.controls = this.controls.bind(this);
     this.windowOnClick = this.windowOnClick.bind(this);
+    this.addEntity = this.addEntity.bind(this);
 
     window.addEventListener("resize", this.resizeCanvas);
     document.addEventListener("keydown", this.controls);
@@ -66,6 +77,33 @@ class Game {
     document.querySelector(".open-modal").addEventListener("click", this.toggleModal);
     document.querySelector(".close-button").addEventListener("click", this.toggleModal);
     window.addEventListener("click", this.windowOnClick);
+
+    document.getElementById("add-entity").addEventListener("click", this.addEntity);
+
+    // document.getElementById("red").addEventListener("click",);
+    // document.getElementById("yellow").addEventListener("click",);
+    // document.getElementById("green").addEventListener("click",);
+    // document.getElementById("blue").addEventListener("click",);
+  }
+
+  addEntity(e) {
+    console.log(this.addEntityProperties);
+    const { type, color, width, height, deg } = this.addEntityProperties;
+    e.stopPropagation();
+    this.setCursorPosition(e);
+
+    if (type === "laser") {
+      this.addLaser(this.mouseX, this.mouseY, deg, color);
+    } else {
+      this.addMirror(this.mouseX, this.mouseY, width, height, deg);
+    }
+    this.dragX = width / 2;
+    this.dragY = height / 2;
+    this.dragging = true;
+
+    this.currentEntity = this.entities[this.entities.length - 1];
+    document.addEventListener("mousemove", this.dragEntity);
+    document.addEventListener("mousedown", this.endDrag);
   }
 
   controls(e) {
