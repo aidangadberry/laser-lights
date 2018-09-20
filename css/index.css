@@ -22,6 +22,17 @@ canvas {
   justify-content: flex-start;
 }
 
+#control-icons {
+  position: absolute;
+  left: 0px;
+  top: 163px;
+  padding: 15px;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  width: 85px;
+}
+
 #info-section {
   position: absolute;
   right: 0px;
@@ -63,7 +74,7 @@ i:hover {
   display: flex;
   justify-content: space-between;
   align-content: center;
-  padding: 5px;
+  padding: 6px;
   user-select: none;
 }
 
@@ -73,19 +84,21 @@ img {
   bottom: 50%;
   object-fit: contain;
   cursor: pointer;
+  border-bottom: 2px solid black;
 }
 
 #color-picker {
   display: grid;
-  grid-gap: 8px;
-  padding: 5px;
+  grid-gap: 9px;
+  padding: 6px;
 }
 
 .color-choice {
-  border: 2px dashed transparent;
+  border: 2px solid transparent;
   border-radius: 5px;
   width: 32px;
   height: 32px;
+  cursor: pointer;
 }
 
 #red {

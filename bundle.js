@@ -207,6 +207,12 @@ class Game {
 
     this.entities = [];
     this.currentEntity;
+    this.addEntityProperties = {
+      type: "laser",
+      color: "#F00",
+      width: 50,
+      height: 10
+    }
 
     this.mouseX;
     this.mouseY;
