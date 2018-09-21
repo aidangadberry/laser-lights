@@ -129,10 +129,10 @@ input {
   background-color: #EE0;
 }
 
-#green {
+#lawngreen {
   grid-column: 1 / 2;
   grid-row: 2 / 3;
-  background-color: #0B0;
+  background-color: lawngreen
 }
 
 #blue {

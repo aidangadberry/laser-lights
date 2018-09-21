@@ -77,7 +77,7 @@ class Game {
 
     document.getElementById("red").addEventListener("click", this.updateColor);
     document.getElementById("yellow").addEventListener("click", this.updateColor);
-    document.getElementById("green").addEventListener("click", this.updateColor);
+    document.getElementById("lawngreen").addEventListener("click", this.updateColor);
     document.getElementById("blue").addEventListener("click", this.updateColor);
 
     document.querySelector("input").addEventListener("change", e => {
