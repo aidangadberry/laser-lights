@@ -130,11 +130,8 @@ function drawBeam(startPos, endPos, color) {
   ctx.moveTo(startPos[0], startPos[1]);
   ctx.lineTo(endPos[0], endPos[1]);
 
-  ctx.strokeStyle = color;
-  ctx.shadowBlur = 15;
-  ctx.shadowColor = color;
-  
-  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = color;  
+  ctx.lineWidth = 2;
   ctx.stroke();
 }
 
@@ -230,17 +227,19 @@ class Game {
 
     this.addLaser(200, 200, 312, "blue");
     this.addLaser(430, 300, 140);
-    this.addMirror(300, 100, 50, 10, 0);
+    this.addLaser(200, 100, 45, "yellow");
+    this.addLaser(300, 300, 205, "lawngreen");
+    this.addMirror(300, 100, 100, 10, 0);
     this.addMirror(310, 130, 50, 10, 180);
-    this.addMirror(100, 400, 50, 10, 270);
-    this.addMirror(400, 40, 50, 10, 0);
-    this.addMirror(210, 500, 50, 10, 180);
+    this.addMirror(100, 400, 30, 10, 270);
+    this.addMirror(300, 200, 120, 10, 135);
+    this.addMirror(210, 500, 70, 10, 180);
 
     this.resizeCanvas();
     this.currentEntity = this.entities[0];
   }
 
-  addLaser(x, y, deg, color = "#F00") {
+  addLaser(x, y, deg, color = "red") {
     this.entities.push(new _laser__WEBPACK_IMPORTED_MODULE_0__["default"](this.ctx, x, y, 50, 10, deg, color));
   }
 
@@ -611,8 +610,6 @@ class Sprite {
   }
 
   draw(drawShape) {
-    this.ctx.shadowBlur = 0;
-    this.ctx.shadowColor = "transparent";
     this.ctx.strokeStyle = "#000";
     this.ctx.lineWidth = 1;
 

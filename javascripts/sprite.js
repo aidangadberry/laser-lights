@@ -16,8 +16,6 @@ class Sprite {
   }
 
   draw(drawShape) {
-    this.ctx.shadowBlur = 0;
-    this.ctx.shadowColor = "transparent";
     this.ctx.strokeStyle = "#000";
     this.ctx.lineWidth = 1;
 

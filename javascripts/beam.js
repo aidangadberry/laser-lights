@@ -13,11 +13,8 @@ function drawBeam(startPos, endPos, color) {
   ctx.moveTo(startPos[0], startPos[1]);
   ctx.lineTo(endPos[0], endPos[1]);
 
-  ctx.strokeStyle = color;
-  ctx.shadowBlur = 15;
-  ctx.shadowColor = color;
-  
-  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = color;  
+  ctx.lineWidth = 2;
   ctx.stroke();
 }
 
