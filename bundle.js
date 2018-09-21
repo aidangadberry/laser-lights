@@ -224,7 +224,6 @@ class Game {
 
   // STARTUP METHODS
   run() {
-    this.createControlPanel();
     this.addListeners();
 
     this.addLaser(200, 200, 312, "blue");
@@ -237,13 +236,6 @@ class Game {
 
     this.resizeCanvas();
     this.currentEntity = this.entities[0];
-  }
-
-  createControlPanel() {
-    const ul = document.getElementById("panel-list");
-    const colorPanel = document.createElement("li");
-
-
   }
 
   addLaser(x, y, deg, color = "#F00") {
@@ -264,6 +256,7 @@ class Game {
     this.windowOnClick = this.windowOnClick.bind(this);
     this.addEntity = this.addEntity.bind(this);
     this.updateColor = this.updateColor.bind(this);
+    this.toggleEntity = this.toggleEntity.bind(this);
 
     window.addEventListener("resize", this.resizeCanvas);
     document.addEventListener("keydown", this.controls);
@@ -273,12 +266,23 @@ class Game {
     document.querySelector(".close-button").addEventListener("click", this.toggleModal);
     window.addEventListener("click", this.windowOnClick);
 
+    document.querySelectorAll("img").forEach(img => img.addEventListener("click", this.toggleEntity))
+
     document.getElementById("add-entity").addEventListener("click", this.addEntity);
 
     document.getElementById("red").addEventListener("click", this.updateColor);
     document.getElementById("yellow").addEventListener("click", this.updateColor);
     document.getElementById("green").addEventListener("click", this.updateColor);
     document.getElementById("blue").addEventListener("click", this.updateColor);
+
+    document.querySelector("input").addEventListener("change", e => {
+      this.addEntityProperties.width = parseInt(e.target.value);
+    });
+  }
+
+  toggleEntity(e) {
+    document.querySelectorAll("img").forEach(img => img.classList.toggle("active"));
+    this.addEntityProperties.type = this.addEntityProperties.type === "laser" ? "mirror" : "laser";
   }
 
   addEntity(e) {
@@ -407,7 +411,6 @@ class Game {
   }
 
   toggleModal() {
-    console.log("modal");
     document.querySelector(".modal").classList.toggle("show-modal");
   }
 
@@ -625,6 +628,8 @@ class Sprite {
     } else {
       this.rad += (mult * 90 * Math.PI) / 180;
     }
+    
+    this.rad = this.rad % (2 * Math.PI);
   }
 }
 

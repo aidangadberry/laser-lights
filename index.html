@@ -10,30 +10,34 @@
   </head>
   <body>
     <div class="main-content-wrapper">
-      <div id="item-control-panel">
-        <ul id="panel-list">
-          <li>
-            <div id="item-dragger">
-                <img draggable="false" src="./images/laser.svg" alt="">
-                <img draggable="false" src="./images/mirror.svg" alt="">
-            </div>
-          </li>
-          <li>
-            <div id="color-picker">
-              <div id="red" class="color-choice selected-color"></div>
-              <div id="yellow" class="color-choice"></div>
-              <div id="green" class="color-choice"></div>
-              <div id="blue" class="color-choice"></div>
-            </div>
-          </li>
-          <li>
-            <div id="size-picker"></div>
-          </li>
-        </ul>
-      </div>
-      <div id="control-icons">
-        <i id="add-entity" class="fas fa-plus"></i>
-        <i id="remove-entity" class="fas fa-trash-alt"></i>
+      <div id="controls">
+        <div id="item-control-panel">
+          <ul id="panel-list">
+            <li>
+              <div id="item-dragger">
+                  <img draggable="false" class="active" src="./images/laser.svg" alt="">
+                  <img draggable="false" src="./images/mirror.svg" alt="">
+              </div>
+            </li>
+            <li>
+              <div id="color-picker">
+                <div id="red" class="color-choice selected-color"></div>
+                <div id="yellow" class="color-choice"></div>
+                <div id="green" class="color-choice"></div>
+                <div id="blue" class="color-choice"></div>
+              </div>
+            </li>
+            <li>
+              <div id="size-picker">
+                <input type="range" min="20" max="150" value="50">
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div id="control-icons">
+          <i id="add-entity" class="fas fa-plus"></i>
+          <i id="remove-entity" class="fas fa-trash-alt"></i>
+        </div>
       </div>
       <div id="info-section">
         <i class="fas fa-lightbulb"></i>

@@ -22,17 +22,6 @@ canvas {
   justify-content: flex-start;
 }
 
-#control-icons {
-  position: absolute;
-  left: 0px;
-  top: 163px;
-  padding: 15px;
-  user-select: none;
-  display: flex;
-  justify-content: space-between;
-  width: 85px;
-}
-
 #info-section {
   position: absolute;
   right: 0px;
@@ -54,10 +43,12 @@ i:hover {
   cursor: pointer;
 }
 
+#controls {
+  position: absolute;
+}
+
 #item-control-panel {
   padding: 10px;
-  position: absolute;
-  left: 0px;
   background-color: #BBB;
   border-right: 2px solid #666;
   border-bottom: 2px solid #666;
@@ -84,7 +75,28 @@ img {
   bottom: 50%;
   object-fit: contain;
   cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+#control-icons {
+  padding: 15px;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  width: 85px;
+}
+
+.active {
   border-bottom: 2px solid black;
+}
+
+#size-picker {
+  width: 81px;
+  padding: 6px;
+}
+
+input {
+  width: 100%;
 }
 
 #color-picker {
@@ -102,7 +114,7 @@ img {
 }
 
 .selected-color {
-  border-color: black;
+  border-color: lightgrey;
 }
 
 #red {
@@ -127,10 +139,6 @@ img {
   grid-column: 2 / 3;
   grid-row: 2 / 3;
   background-color: #00F;
-}
-
-.active {
-  border: 1px dashed red;
 }
 
 /* MODAL */
