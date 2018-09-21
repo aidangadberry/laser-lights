@@ -545,11 +545,7 @@ class Mirror extends _sprite__WEBPACK_IMPORTED_MODULE_0__["default"] {
   }
 
   reflectedAngle(angle) {
-    if (this.rad % Math.PI === 0) {
-      return -angle;
-    } else {
-      return Math.PI - angle;
-    }
+    return 2 * this.rad - angle;
   }
 
   drawMirror(x, y, width, height, ctx) {
@@ -626,9 +622,9 @@ class Sprite {
     if (this instanceof _laser__WEBPACK_IMPORTED_MODULE_0__["default"]) {
       this.rad += (mult * 0.5 * Math.PI) / 180;
     } else {
-      this.rad += (mult * 90 * Math.PI) / 180;
+      this.rad += (mult * 1 * Math.PI) / 180;
     }
-    
+
     this.rad = this.rad % (2 * Math.PI);
   }
 }

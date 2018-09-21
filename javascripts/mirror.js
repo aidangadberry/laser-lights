@@ -13,11 +13,7 @@ class Mirror extends Sprite {
   }
 
   reflectedAngle(angle) {
-    if (this.rad % Math.PI === 0) {
-      return -angle;
-    } else {
-      return Math.PI - angle;
-    }
+    return 2 * this.rad - angle;
   }
 
   drawMirror(x, y, width, height, ctx) {

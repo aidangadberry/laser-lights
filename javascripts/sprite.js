@@ -43,9 +43,9 @@ class Sprite {
     if (this instanceof Laser) {
       this.rad += (mult * 0.5 * Math.PI) / 180;
     } else {
-      this.rad += (mult * 90 * Math.PI) / 180;
+      this.rad += (mult * 1 * Math.PI) / 180;
     }
-    
+
     this.rad = this.rad % (2 * Math.PI);
   }
 }
