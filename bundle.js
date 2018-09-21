@@ -220,6 +220,8 @@ class Game {
     this.dragging = false;
     this.dragX;
     this.dragY;
+
+    this.blackout = false;
   }
 
   // STARTUP METHODS
@@ -277,6 +279,11 @@ class Game {
 
     document.querySelector("input").addEventListener("change", e => {
       this.addEntityProperties.width = parseInt(e.target.value);
+    });
+
+    document.getElementById("light-toggle").addEventListener("click", () => {
+      this.blackout = !this.blackout;
+      this.drawGame();
     });
   }
 
@@ -422,13 +429,22 @@ class Game {
 
   // RENDER METHODS
   drawGame() {
-    this.ctx.fillStyle = "#EEE";
-    this.ctx.rect(0, 0, window.innerWidth, window.innerHeight);
-    this.ctx.fill();
+    if (this.blackout) {
+      this.ctx.fillStyle = "#000"
+      this.ctx.rect(0, 0, window.innerWidth, window.innerHeight);
+      this.ctx.fill();
 
-    this.drawBackground();
-    this.renderBeams();
-    this.renderEntities();
+      this.renderBeams();
+      this.ctx.shadowBlur = 0;
+    } else {
+      this.ctx.fillStyle = "#EEE";
+      this.ctx.rect(0, 0, window.innerWidth, window.innerHeight);
+      this.ctx.fill();
+  
+      this.drawBackground();
+      this.renderBeams();
+      this.renderEntities();
+    }
   }
 
   drawBackground() {
