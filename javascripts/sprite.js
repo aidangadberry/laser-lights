@@ -45,6 +45,8 @@ class Sprite {
     } else {
       this.rad += (mult * 90 * Math.PI) / 180;
     }
+    
+    this.rad = this.rad % (2 * Math.PI);
   }
 }
 
