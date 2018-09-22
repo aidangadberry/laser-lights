@@ -6,14 +6,17 @@ import {
 } from './util';
 import Mirror from './mirror';
 
-function drawBeam(startPos, endPos, color) {
-  const ctx = document.getElementById('canvas').getContext('2d');
+function drawBeams(positions, color) {
+  const ctx = document.getElementById("canvas").getContext("2d");
 
   ctx.beginPath();
-  ctx.moveTo(startPos[0], startPos[1]);
-  ctx.lineTo(endPos[0], endPos[1]);
+  
+  for (let i = 0; i < positions.length - 1; i += 1) {
+    ctx.moveTo(positions[i][0], positions[i][1]);
+    ctx.lineTo(positions[i + 1][0], positions[i + 1][1]);
+  }
 
-  ctx.strokeStyle = color;  
+  ctx.strokeStyle = color;
   ctx.lineWidth = 2;
   ctx.stroke();
 }
@@ -51,10 +54,13 @@ export const getBeams = (laser, entities) => {
   let beamEnd = false;
   let endPos;
   let startPos = laserPos.slice(0);
+  const positions = [startPos];
 
   while (beamEnd === false) {
     ({endPos, angle, beamEnd} = getBeamCollision(startPos, angle, entities));
-    drawBeam(startPos, endPos, laser.color);
     startPos = endPos.slice(0);
+    positions.push(startPos.slice(0));
   }
+
+  drawBeams(positions, laser.color);
 }
