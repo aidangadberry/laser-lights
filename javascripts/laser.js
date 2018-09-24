@@ -11,6 +11,7 @@ class Laser extends Sprite {
       this.height,
       this.rad
     );
+    this.laser = true;
   }
 
   drawLaser(x, y, width, height, ctx, color) {

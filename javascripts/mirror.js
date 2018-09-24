@@ -3,6 +3,7 @@ import Sprite from './sprite';
 class Mirror extends Sprite {
   constructor(ctx, x, y, width, height, deg) {
     super(ctx, x, y, width, height, deg);
+    this.mirror = true;
   }
 
   corners() {
