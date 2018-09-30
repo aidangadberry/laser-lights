@@ -1,6 +1,6 @@
 import Laser from './laser';
 import Mirror from './mirror';
-import {getBeams} from './beam';
+import {getBeamPositions} from './beam';
 import {collidesWithObject} from './util';
 
 class Game {
@@ -278,10 +278,26 @@ class Game {
     for (var i = 0; i < this.entities.length; i++) {
       const entity = this.entities[i];
 
-      if (entity instanceof Laser) {
-        getBeams(entity, this.entities);
+      if (entity.laser) {
+        const positions = getBeamPositions(entity, this.entities);
+        this.drawBeams(positions, entity.color);
       }
     }
+  }
+
+  drawBeams(positions, color) {
+    const ctx = this.ctx;
+
+    ctx.beginPath();
+
+    for (let i = 0; i < positions.length - 1; i++) {
+      ctx.moveTo(positions[i][0], positions[i][1]);
+      ctx.lineTo(positions[i + 1][0], positions[i + 1][1]);
+    }
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.stroke();
   }
 
   renderEntities() {

@@ -112,74 +112,66 @@ document.addEventListener('DOMContentLoaded', () => {
 /*!*****************************!*\
   !*** ./javascripts/beam.js ***!
   \*****************************/
-/*! exports provided: getBeams */
+/*! exports provided: getBeamPositions */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getBeams", function() { return getBeams; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getBeamPositions", function() { return getBeamPositions; });
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util */ "./javascripts/util.js");
-/* harmony import */ var _mirror__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./mirror */ "./javascripts/mirror.js");
 
-
-
-function drawBeams(positions, color) {
-  const ctx = document.getElementById("canvas").getContext("2d");
-
-  ctx.beginPath();
-  
-  for (let i = 0; i < positions.length - 1; i += 1) {
-    ctx.moveTo(positions[i][0], positions[i][1]);
-    ctx.lineTo(positions[i + 1][0], positions[i + 1][1]);
-  }
-
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 2;
-  ctx.stroke();
-}
 
 function getBeamCollision(startPos, angle, entities) {
-  let currPos = startPos.slice(0);
   const dx = Math.cos(angle);
   const dy = Math.sin(angle);
+  const canvas = entities[0].ctx.canvas;
+  let currPos = [startPos[0], startPos[1]];
+  let collision = false;
 
-  while (Object(_util__WEBPACK_IMPORTED_MODULE_0__["isInBounds"])(currPos)) {
-    currPos[0] += dx / 10;
-    currPos[1] += dy / 10;
+  const beamData = {
+    endPos: currPos,
+    angle,
+    beamEnd: true
+  };
+
+  while (Object(_util__WEBPACK_IMPORTED_MODULE_0__["isInBounds"])(currPos, canvas) && !collision) {
+    currPos[0] += dx / 5;
+    currPos[1] += dy / 5;
 
     for (var i = 0; i < entities.length; i++) {
       const entity = entities[i];
       
-      if (Object(_util__WEBPACK_IMPORTED_MODULE_0__["collidesWithObject"])(currPos, entities[i])) {
-        if (entity instanceof _mirror__WEBPACK_IMPORTED_MODULE_1__["default"]) {
+      if (Object(_util__WEBPACK_IMPORTED_MODULE_0__["collidesWithObject"])(currPos, entity)) {
+        if (entity.mirror) {
           if (Object(_util__WEBPACK_IMPORTED_MODULE_0__["pointIsOnMirrorEdge"])(currPos, entity)) {
-            return ({ endPos: currPos, angle: entity.reflectedAngle(angle), beamEnd: false });
+            beamData.angle = entity.reflectedAngle(angle);
+            beamData.beamEnd = false;
           }
         }
 
-        return ({ endPos: currPos, angle: angle, beamEnd: true });
+        collision = true;
+        break;
       }
     }
   }
 
-  return ({endPos: currPos, angle: angle, beamEnd: true});
+  return beamData;
 }
 
-const getBeams = (laser, entities) => {
-  let laserPos = Object(_util__WEBPACK_IMPORTED_MODULE_0__["getRotatedLaserPos"])(laser.x, laser.y, laser.width, laser.height, laser.rad);
+const getBeamPositions = (laser, entities) => {
+  let startPos = Object(_util__WEBPACK_IMPORTED_MODULE_0__["getRotatedLaserPos"])(laser.x, laser.y, laser.width, laser.height, laser.rad);
   let angle = laser.rad;
   let beamEnd = false;
   let endPos;
-  let startPos = laserPos.slice(0);
   const positions = [startPos];
 
   while (beamEnd === false) {
     ({endPos, angle, beamEnd} = getBeamCollision(startPos, angle, entities));
-    startPos = endPos.slice(0);
-    positions.push(startPos.slice(0));
+    startPos = endPos;
+    positions.push(startPos);
   }
 
-  drawBeams(positions, laser.color);
+  return positions;
 }
 
 
@@ -478,10 +470,26 @@ class Game {
     for (var i = 0; i < this.entities.length; i++) {
       const entity = this.entities[i];
 
-      if (entity instanceof _laser__WEBPACK_IMPORTED_MODULE_0__["default"]) {
-        Object(_beam__WEBPACK_IMPORTED_MODULE_2__["getBeams"])(entity, this.entities);
+      if (entity.laser) {
+        const positions = Object(_beam__WEBPACK_IMPORTED_MODULE_2__["getBeamPositions"])(entity, this.entities);
+        this.drawBeams(positions, entity.color);
       }
     }
+  }
+
+  drawBeams(positions, color) {
+    const ctx = this.ctx;
+
+    ctx.beginPath();
+
+    for (let i = 0; i < positions.length - 1; i++) {
+      ctx.moveTo(positions[i][0], positions[i][1]);
+      ctx.lineTo(positions[i + 1][0], positions[i + 1][1]);
+    }
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.stroke();
   }
 
   renderEntities() {
@@ -520,6 +528,7 @@ class Laser extends _sprite__WEBPACK_IMPORTED_MODULE_0__["default"] {
       this.height,
       this.rad
     );
+    this.laser = true;
   }
 
   drawLaser(x, y, width, height, ctx, color) {
@@ -556,6 +565,7 @@ __webpack_require__.r(__webpack_exports__);
 class Mirror extends _sprite__WEBPACK_IMPORTED_MODULE_0__["default"] {
   constructor(ctx, x, y, width, height, deg) {
     super(ctx, x, y, width, height, deg);
+    this.mirror = true;
   }
 
   corners() {
@@ -638,7 +648,7 @@ class Sprite {
   rotateSprite(dir) {
     const mult = dir === "clockwise" ? 1 : -1;
 
-    if (this instanceof _laser__WEBPACK_IMPORTED_MODULE_0__["default"]) {
+    if (this.laser) {
       this.rad += (mult * 0.5 * Math.PI) / 180;
     } else {
       this.rad += (mult * 1 * Math.PI) / 180;
@@ -682,20 +692,21 @@ const getRotatedPos = (pos, centerPos, rad) => {
   const cy = centerPos[1];
   let px = pos[0];
   let py = pos[1];
+  const sin = Math.sin(rad);
+  const cos = Math.cos(rad);
 
   px -= cx;
   py -= cy;
 
-  const rx = px * Math.cos(rad) - py * Math.sin(rad);
-  const ry = px * Math.sin(rad) + py * Math.cos(rad);
+  const rx = px * cos - py * sin;
+  const ry = px * sin + py * cos;
 
   return [rx + cx, ry + cy];
 }
 
-const isInBounds = pos => {
-  const canvas = document.getElementById('canvas');
-  const width = parseInt(canvas.style.width.slice(0, -2));
-  const height = parseInt(canvas.style.height.slice(0, -2));
+const isInBounds = (pos, canvas) => {
+  const width = canvas.width;
+  const height = canvas.height;
 
   return (pos[0] > 0 && pos[0] < width && pos[1] > 0 && pos[1] < height);
 }
@@ -712,7 +723,7 @@ const pointIsOnMirrorEdge = (pos, mirror) => {
 
   const dist = Math.abs((y2 - y1)*x0 - (x2 - x1)*y0 + x2*y1 - y2*x1) / mirror.width;
 
-  return (dist <=  .2);
+  return (dist <=  .5);
 }
 
 const collidesWithObject = (pos, object) => {

@@ -38,7 +38,7 @@ class Sprite {
   rotateSprite(dir) {
     const mult = dir === "clockwise" ? 1 : -1;
 
-    if (this instanceof Laser) {
+    if (this.laser) {
       this.rad += (mult * 0.5 * Math.PI) / 180;
     } else {
       this.rad += (mult * 1 * Math.PI) / 180;

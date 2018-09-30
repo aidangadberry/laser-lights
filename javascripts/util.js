@@ -13,20 +13,21 @@ export const getRotatedPos = (pos, centerPos, rad) => {
   const cy = centerPos[1];
   let px = pos[0];
   let py = pos[1];
+  const sin = Math.sin(rad);
+  const cos = Math.cos(rad);
 
   px -= cx;
   py -= cy;
 
-  const rx = px * Math.cos(rad) - py * Math.sin(rad);
-  const ry = px * Math.sin(rad) + py * Math.cos(rad);
+  const rx = px * cos - py * sin;
+  const ry = px * sin + py * cos;
 
   return [rx + cx, ry + cy];
 }
 
-export const isInBounds = pos => {
-  const canvas = document.getElementById('canvas');
-  const width = parseInt(canvas.style.width.slice(0, -2));
-  const height = parseInt(canvas.style.height.slice(0, -2));
+export const isInBounds = (pos, canvas) => {
+  const width = canvas.width;
+  const height = canvas.height;
 
   return (pos[0] > 0 && pos[0] < width && pos[1] > 0 && pos[1] < height);
 }
@@ -43,7 +44,7 @@ export const pointIsOnMirrorEdge = (pos, mirror) => {
 
   const dist = Math.abs((y2 - y1)*x0 - (x2 - x1)*y0 + x2*y1 - y2*x1) / mirror.width;
 
-  return (dist <=  .2);
+  return (dist <=  .5);
 }
 
 export const collidesWithObject = (pos, object) => {
