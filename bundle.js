@@ -223,18 +223,19 @@ class Game {
   run() {
     this.addListeners();
 
-    this.addLaser(200, 200, 312, "blue");
-    this.addLaser(430, 300, 140);
-    this.addLaser(200, 100, 45, "yellow");
-    this.addLaser(300, 300, 205, "lawngreen");
-    this.addMirror(300, 100, 100, 10, 0);
-    this.addMirror(310, 130, 50, 10, 180);
-    this.addMirror(100, 400, 30, 10, 270);
-    this.addMirror(300, 200, 120, 10, 135);
+    this.addLaser(430, 300, 140, "red");
+    this.addLaser(585, 347, 225, "lawngreen");
+    this.addLaser(528, 460, 255, "blue");
     this.addMirror(210, 500, 70, 10, 180);
+    this.addMirror(375, 155, 50, 10, 300);
+    this.addMirror(92, 397, 30, 10, 270);
+    this.addMirror(498, 180, 120, 10, 135);
+    this.addMirror(435, 71, 100, 10, 0);
 
     this.resizeCanvas();
     this.currentEntity = this.entities[0];
+
+    window.entities = this.entities;
   }
 
   addLaser(x, y, deg, color = "red") {
