@@ -87,7 +87,7 @@ img {
 }
 
 .active {
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid white;
 }
 
 #size-picker {
@@ -97,6 +97,10 @@ img {
 
 input {
   width: 100%;
+}
+
+input:hover {
+  cursor: pointer;
 }
 
 #color-picker {
@@ -114,7 +118,7 @@ input {
 }
 
 .selected-color {
-  border-color: lightgrey;
+  border-color: white;
 }
 
 #red {
