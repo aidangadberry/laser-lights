@@ -433,6 +433,7 @@ class Game {
       this.ctx.fill();
 
       this.renderBeams();
+      this.renderEntities();
       this.ctx.shadowBlur = 0;
     } else {
       this.ctx.fillStyle = "#EEE";
@@ -465,6 +466,15 @@ class Game {
     }
 
     this.ctx.globalAlpha = 1;
+
+    var x = window.innerWidth / 2;
+    var y = 5 * window.innerHeight / 6;
+    
+    this.ctx.font = '60px Verdana';
+    this.ctx.fillStyle = '#BEBEBE';
+    this.ctx.textAlign = 'center';
+    this.ctx.textBaseline = 'middle';
+    this.ctx.fillText('LaserLights', x, y);
   }
 
   renderBeams() {
@@ -495,7 +505,15 @@ class Game {
 
   renderEntities() {
     for (var i = 0; i < this.entities.length; i++) {
-      this.entities[i].render();
+      const entity = this.entities[i];
+      
+      if (this.blackout) {
+        if (entity.laser) {
+          entity.renderBlackout();
+        }
+      } else {
+        entity.render();
+      }
     }
   }
 }
@@ -539,6 +557,16 @@ class Laser extends _sprite__WEBPACK_IMPORTED_MODULE_0__["default"] {
     ctx.fillStyle = color;
     ctx.fillRect(x + width - 10, y, 10, height);
     ctx.strokeRect(x + width - 10, y, 10, height);
+  }
+
+  drawLaserPoint(x, y, width, height, ctx, color) {
+    ctx.fillStyle = color;
+    ctx.fillRect(x + width - 10, y, 10, height);
+    ctx.strokeRect(x + width - 10, y, 10, height);
+  }
+
+  renderBlackout() {
+    super.draw(this.drawLaserPoint);
   }
 
   render() {

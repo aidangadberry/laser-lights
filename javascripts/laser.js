@@ -23,6 +23,16 @@ class Laser extends Sprite {
     ctx.strokeRect(x + width - 10, y, 10, height);
   }
 
+  drawLaserPoint(x, y, width, height, ctx, color) {
+    ctx.fillStyle = color;
+    ctx.fillRect(x + width - 10, y, 10, height);
+    ctx.strokeRect(x + width - 10, y, 10, height);
+  }
+
+  renderBlackout() {
+    super.draw(this.drawLaserPoint);
+  }
+
   render() {
     super.draw(this.drawLaser);
   }
