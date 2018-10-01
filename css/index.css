@@ -53,6 +53,8 @@ i:hover {
   border-right: 2px solid #666;
   border-bottom: 2px solid #666;
   border-bottom-right-radius: 10px;
+
+  box-shadow: 2px 2px 10px 0px rgba(0,0,0,0.5);
 }
 
 #panel-list {
@@ -163,13 +165,39 @@ input:hover {
   top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: white;
+  background-color: #EEE;
   padding: 15px;
-  width: 25rem;
+  width: 30rem;
   border-radius: 10px;
 
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
+
+.modal-content h1 {
+  text-align: center;
+}
+
+.modal-content li {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 22px;
+  margin-left: 15px;
+}
+
+.modal-content i {
+  font-size: 20px;
+}
+
+.modal-content ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.modal-content ul > li::before {
+  content: "-";
+  margin-left: -15px;
+  padding-right: 8px;
+}
+
 .close-button {
   float: right;
   width: 1.5rem;

@@ -471,7 +471,7 @@ class Game {
     var y = 5 * window.innerHeight / 6;
     
     this.ctx.font = '60px Verdana';
-    this.ctx.fillStyle = '#BEBEBE';
+    this.ctx.fillStyle = '#BBB';
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'middle';
     this.ctx.fillText('LaserLights', x, y);
