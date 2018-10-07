@@ -30,7 +30,7 @@ class Laser extends Sprite {
   }
 
   renderBlackout() {
-    super.draw(this.drawLaserPoint);
+    super.draw(this.drawLaserPoint, true);
   }
 
   render() {

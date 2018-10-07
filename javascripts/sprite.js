@@ -9,13 +9,14 @@ class Sprite {
     this.height = height;
     this.rad = (deg * Math.PI) / 180;
     this.color = color;
+    this.current = false;
   }
 
   getCenterPos() {
     return [this.x + this.width / 2, this.y + this.height / 2];
   }
 
-  draw(drawShape) {
+  draw(drawShape, blackout = false) {
     this.ctx.strokeStyle = "#000";
     this.ctx.lineWidth = 1;
 
@@ -30,6 +31,16 @@ class Sprite {
       this.ctx,
       this.color
     );
+
+    if (this.current && !blackout) {
+      this.ctx.strokeStyle = "#C0C";
+
+      if (this.mirror) {
+        this.ctx.strokeRect(-this.width / 2, -this.height / 2, this.width, this.height - 4);
+      } else {
+        this.ctx.strokeRect(-this.width / 2, -this.height / 2, this.width - 10, this.height);
+      }
+    }
 
     this.ctx.rotate(2 * Math.PI - this.rad);
     this.ctx.translate(-this.x - this.width / 2, -this.y - this.height / 2);

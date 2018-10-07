@@ -40,8 +40,9 @@ class Game {
     this.addMirror(498, 180, 120, 10, 135);
     this.addMirror(435, 71, 100, 10, 0);
 
-    this.resizeCanvas();
     this.currentEntity = this.entities[0];
+    this.currentEntity.current = true;
+    this.resizeCanvas();
 
     window.entities = this.entities;
   }
@@ -149,7 +150,9 @@ class Game {
       const entity = this.entities[i];
 
       if (collidesWithObject([this.mouseX, this.mouseY], entity)) {
+        this.currentEntity.current = false;
         this.currentEntity = entity;
+        this.currentEntity.current = true;
         this.entities.splice(i, 1);
         this.entities.push(entity);
 
