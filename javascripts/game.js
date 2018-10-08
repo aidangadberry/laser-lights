@@ -102,22 +102,14 @@ class Game {
   addEntity(e) {
     const { type, color, width, height, deg } = this.addEntityProperties;
     e.stopPropagation();
-    this.setCursorPosition(e);
-
-    this.dragX = width / 2;
-    this.dragY = height / 2;
 
     if (type === "laser") {
-      this.addLaser(this.mouseX - this.dragX, this.mouseY - this.dragY, deg, color);
+      this.addLaser(57.5 - width / 2, 322.5 - height / 2, deg, color);
     } else {
-      this.addMirror(this.mouseX - this.dragX, this.mouseY - this.dragY, width, height, deg);
+      this.addMirror(57.5 - width / 2, 322.5 - height / 2, width, height, deg);
     }
-    this.dragging = true;
-
-    this.currentEntity = this.entities[this.entities.length - 1];
+    
     this.drawGame();
-    document.addEventListener("mousemove", this.dragEntity);
-    document.addEventListener("mousedown", this.endDrag);
   }
 
   updateColor(e) {
@@ -146,7 +138,7 @@ class Game {
     e.stopPropagation();
     this.setCursorPosition(e);
 
-    for (var i = 0; i < this.entities.length; i++) {
+    for (var i = this.entities.length - 1; i >= 0; i--) {
       const entity = this.entities[i];
 
       if (collidesWithObject([this.mouseX, this.mouseY], entity)) {
@@ -159,11 +151,12 @@ class Game {
         this.dragging = true;
         this.dragX = this.mouseX - entity.x;
         this.dragY = this.mouseY - entity.y;
+        break;
       }
     }
 
     if (this.dragging) {
-      this.canvas.style.setProperty("cursor", "move");
+      document.querySelector("body").style.setProperty("cursor", "move");
       document.addEventListener("mousemove", this.dragEntity, false);
     }
 
@@ -192,7 +185,7 @@ class Game {
     e.stopPropagation();
 
     if (this.dragging) {
-      this.canvas.style.removeProperty("cursor");
+      document.querySelector("body").style.removeProperty("cursor");
       this.dragging = false;
       document.removeEventListener("mousemove", this.dragEntity, false);
 
